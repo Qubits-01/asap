@@ -26,6 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "com.nesvier.ate_kens_food_delivery"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
