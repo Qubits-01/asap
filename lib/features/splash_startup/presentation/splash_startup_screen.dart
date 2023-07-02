@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class SplashStartupScreen extends StatelessWidget {
+import '../../home/presentation/home_screen.dart';
+
+class SplashStartupScreen extends StatefulWidget {
   const SplashStartupScreen({super.key});
 
   static const routeName = '/';
+
+  @override
+  State<SplashStartupScreen> createState() => _SplashStartupScreenState();
+}
+
+class _SplashStartupScreenState extends State<SplashStartupScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future<void>.delayed(const Duration(milliseconds: 1500), () {
+      GoRouter.of(context).go(HomeScreen.routeName);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
