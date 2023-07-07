@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../features/announcements/presentation/edit_announcement_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/splash_startup/presentation/splash_startup_screen.dart';
 import '../features/user_profile/presentation/user_profile.dart';
@@ -22,6 +23,10 @@ class AppRouter {
       GoRoute(
         path: UserProfile.routName,
         builder: (_, __) => const UserProfile(),
+      ),
+      GoRoute(
+        path: EditAnnouncement.routeName,
+        builder: (_, __) => const EditAnnouncement(),
       ),
     ],
   );
