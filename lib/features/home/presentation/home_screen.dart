@@ -35,83 +35,88 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
       drawer: const AppNavigationDrawer(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // TODO: Implement search feature. Search for oders by date, food name, etc.
-              // Search bar.
-              const HomeSearchAnchor(),
-              const SizedBox(height: 24.0),
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // TODO: Implement search feature. Search for oders by date, food name, etc.
+                // Search bar.
+                const HomeSearchAnchor(),
+                const SizedBox(height: 24.0),
 
-              // Quick Access label.
-              Text(
-                'Quick Access',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8.0),
+                // Quick Access label.
+                Text(
+                  'Quick Access',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8.0),
 
-              // List of quick access navigation destinations.
-              const QuickAccessDestinationsList(),
-              const SizedBox(height: 24.0),
+                // List of quick access navigation destinations.
+                const QuickAccessDestinationsList(),
+                const SizedBox(height: 24.0),
 
-              // Announcements label.
-              Text(
-                'Announcements',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8.0),
+                // Announcements label.
+                Text(
+                  'Announcements',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8.0),
 
-              // List of announcements.
-              Card(
-                child: Container(
-                  height: 350.0,
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    children: <Widget>[
-                      quill.QuillEditor(
-                        controller: _announcementTextController,
-                        readOnly: false,
-                        autoFocus: false,
-                        focusNode: FocusNode(),
-                        scrollController: ScrollController(),
-                        scrollable: true,
-                        padding: const EdgeInsets.all(8.0),
-                        expands: false,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          IconButton(
-                            onPressed: () {
-                              GoRouter.of(context)
-                                  .push(EditAnnouncement.routeName);
-                            },
-                            icon: const Icon(Icons.thumb_up_outlined),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              GoRouter.of(context)
-                                  .push(EditAnnouncement.routeName);
-                            },
-                            icon: const Icon(Icons.thumb_down_outlined),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              GoRouter.of(context)
-                                  .push(EditAnnouncement.routeName);
-                            },
-                            icon: const Icon(Icons.edit_outlined),
-                          ),
-                        ],
-                      ),
-                    ],
+                // List of announcements.
+                Card(
+                  child: Container(
+                    height: 350.0,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Column(
+                      children: <Widget>[
+                        quill.QuillEditor(
+                          controller: _announcementTextController,
+                          readOnly: false,
+                          autoFocus: false,
+                          focusNode: FocusNode(),
+                          scrollController: ScrollController(),
+                          scrollable: true,
+                          padding: const EdgeInsets.all(8.0),
+                          expands: false,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(
+                              onPressed: () {
+                                GoRouter.of(context)
+                                    .push(EditAnnouncementScreen.routeName);
+                              },
+                              icon: const Icon(Icons.thumb_up_outlined),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                GoRouter.of(context)
+                                    .push(EditAnnouncementScreen.routeName);
+                              },
+                              icon: const Icon(Icons.thumb_down_outlined),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                GoRouter.of(context)
+                                    .push(EditAnnouncementScreen.routeName);
+                              },
+                              icon: const Icon(Icons.edit_outlined),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -128,9 +133,8 @@ class QuickAccessDestinationsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: Container(
+      child: SizedBox(
         height: 250.0,
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: ListView(
           children: <Widget>[
             ListTile(

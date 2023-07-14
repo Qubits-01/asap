@@ -14,7 +14,7 @@ class AteKensFoodDeliveryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightMode,
+      theme: AppTheme.darkMode,
       routerConfig: AppRouter.router,
     );
   }

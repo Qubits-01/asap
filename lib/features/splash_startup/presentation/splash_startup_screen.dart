@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../home/presentation/home_screen.dart';
+import '../../../core/features/auth/presentation/login_screen.dart';
 
 class SplashStartupScreen extends StatefulWidget {
   const SplashStartupScreen({super.key});
@@ -18,7 +18,7 @@ class _SplashStartupScreenState extends State<SplashStartupScreen> {
     super.initState();
 
     Future<void>.delayed(const Duration(milliseconds: 1500), () {
-      GoRouter.of(context).go(HomeScreen.routeName);
+      GoRouter.of(context).go(LoginScreen.routeName);
     });
   }
 
