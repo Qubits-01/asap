@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -36,12 +38,18 @@ class SignUpFormStepper extends StatefulWidget {
 
 class _SignUpFormStepperState extends State<SignUpFormStepper> {
   late int _stepperIndex;
+  late List<_StepState> _stepStates;
 
   @override
   void initState() {
     super.initState();
 
     _stepperIndex = 0;
+    _stepStates = <_StepState>[
+      const _StepState(stepState: StepState.editing, isActive: true),
+      const _StepState(),
+      const _StepState(),
+    ];
   }
 
   @override
@@ -50,7 +58,26 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
       currentStep: _stepperIndex,
       onStepContinue: () {
         setState(() {
-          if (_stepperIndex < 2) _stepperIndex += 1;
+          if (_stepperIndex < 2) {
+            final int prevStepperIndex = _stepperIndex;
+
+            // Update the current active stepper index.
+            _stepperIndex += 1;
+
+            // Update the current active step.
+            _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+              stepState: StepState.editing,
+              isActive: true,
+            );
+
+            // Update the previous active step.
+            _stepStates[prevStepperIndex] =
+                _stepStates[prevStepperIndex].copyWith(
+              stepState: StepState.indexed,
+              isActive: false,
+            );
+          }
+          ;
 
           if (_stepperIndex == 2) {
             // Show loading indicator.
@@ -66,12 +93,46 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
       },
       onStepCancel: () {
         setState(() {
-          if (_stepperIndex > 0) _stepperIndex -= 1;
+          if (_stepperIndex > 0) {
+            final int prevStepperIndex = _stepperIndex;
+
+            // Update the current active stepper index.
+            _stepperIndex -= 1;
+
+            // Update the current active step.
+            _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+              stepState: StepState.editing,
+              isActive: true,
+            );
+
+            // Update the previous active step.
+            _stepStates[prevStepperIndex] =
+                _stepStates[prevStepperIndex].copyWith(
+              stepState: StepState.indexed,
+              isActive: false,
+            );
+          }
         });
       },
       onStepTapped: (int index) {
         setState(() {
+          final int prevStepperIndex = _stepperIndex;
+
+          // Update the current active stepper index.
           _stepperIndex = index;
+
+          // Update the current active step.
+          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+            stepState: StepState.editing,
+            isActive: true,
+          );
+
+          // Update the previous active step.
+          _stepStates[prevStepperIndex] =
+              _stepStates[prevStepperIndex].copyWith(
+            stepState: StepState.indexed,
+            isActive: false,
+          );
         });
       },
       steps: <Step>[
@@ -79,6 +140,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         Step(
           title: const Text('User Information'),
           subtitle: const Text('This is to identify you correctly.'),
+          state: _stepStates[0].stepState,
+          isActive: _stepStates[0].isActive,
           content: Card(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
@@ -105,14 +168,18 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                       const Icon(Icons.verified_rounded),
                     ],
                   ),
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 8.0),
+
+                  // Horizontal divider.
+                  const Divider(),
+                  const SizedBox(height: 8.0),
 
                   // First name and Middle initial.
                   Row(
                     children: <Widget>[
                       // First name.
                       Expanded(
-                        flex: 80,
+                        flex: 75,
                         child: TextFormField(
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.next,
@@ -127,7 +194,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
 
                       // Middle initial.
                       Expanded(
-                        flex: 20,
+                        flex: 25,
                         child: TextFormField(
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.next,
@@ -179,7 +246,6 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
               ),
             ),
           ),
-          state: StepState.editing,
         ),
 
         // Delivery address.
@@ -187,7 +253,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           title: const Text('Delivery Address'),
           subtitle: const Text('Default address. Can be modified later.'),
           content: const Text('Step 1 content'),
-          state: StepState.indexed,
+          state: _stepStates[1].stepState,
+          isActive: _stepStates[1].isActive,
         ),
 
         // Contact information.
@@ -195,7 +262,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           title: const Text('Contact Information'),
           subtitle: const Text('A way to verify your identity.'),
           content: const Text('Step 1 content'),
-          state: StepState.indexed,
+          state: _stepStates[2].stepState,
+          isActive: _stepStates[2].isActive,
         ),
       ],
     );
@@ -220,6 +288,32 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           ),
         );
       },
+    );
+  }
+}
+
+class _StepState extends Equatable {
+  const _StepState({
+    this.stepState = StepState.indexed,
+    this.isActive = false,
+  });
+
+  final StepState stepState;
+  final bool isActive;
+
+  @override
+  List<Object?> get props => [
+        stepState,
+        isActive,
+      ];
+
+  _StepState copyWith({
+    StepState? stepState,
+    bool? isActive,
+  }) {
+    return _StepState(
+      stepState: stepState ?? this.stepState,
+      isActive: isActive ?? this.isActive,
     );
   }
 }

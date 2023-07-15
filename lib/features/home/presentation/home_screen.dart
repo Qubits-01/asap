@@ -197,7 +197,7 @@ class QuickAccessDestinationsList extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.person_outline_outlined),
               title: const Text('Profile'),
-              subtitle: const Text('View and edit your account details'),
+              subtitle: const Text('Configure your account'),
               enabled: true,
               selected: false,
               contentPadding: const EdgeInsets.fromLTRB(
