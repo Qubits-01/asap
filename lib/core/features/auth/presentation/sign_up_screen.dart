@@ -51,6 +51,17 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
       onStepContinue: () {
         setState(() {
           if (_stepperIndex < 2) _stepperIndex += 1;
+
+          if (_stepperIndex == 2) {
+            // Show loading indicator.
+            _showLoadingIndicator(buildContext: context);
+
+            // Simulate a 2-second delay.
+            Future.delayed(const Duration(seconds: 2), () {
+              // Remove the loading indicator.
+              Navigator.of(context).pop();
+            });
+          }
         });
       },
       onStepCancel: () {
@@ -64,8 +75,9 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         });
       },
       steps: <Step>[
+        // User information.
         Step(
-          title: const Text('Basic User Information'),
+          title: const Text('User Information'),
           subtitle: const Text('This is to identify you correctly.'),
           content: Card(
             child: Padding(
@@ -169,12 +181,16 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           ),
           state: StepState.editing,
         ),
+
+        // Delivery address.
         Step(
-          title: const Text('Complete Address'),
-          subtitle: const Text('Default address. Can be modified later on.'),
+          title: const Text('Delivery Address'),
+          subtitle: const Text('Default address. Can be modified later.'),
           content: const Text('Step 1 content'),
           state: StepState.indexed,
         ),
+
+        // Contact information.
         Step(
           title: const Text('Contact Information'),
           subtitle: const Text('A way to verify your identity.'),
@@ -182,6 +198,28 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           state: StepState.indexed,
         ),
       ],
+    );
+  }
+
+  Future<void> _showLoadingIndicator({required BuildContext buildContext}) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                CircularProgressIndicator.adaptive(),
+                SizedBox(height: 12.0),
+                Text('Loading...'),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
