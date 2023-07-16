@@ -39,6 +39,7 @@ dependencies:
   flutter_quill: ^7.2.11
   font_awesome_flutter: ^10.5.0
   equatable: ^2.0.5
+  image_picker: ^1.0.1
 
 dev_dependencies:
   flutter_test:

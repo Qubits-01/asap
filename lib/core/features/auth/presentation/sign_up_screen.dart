@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -58,7 +59,16 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
       currentStep: _stepperIndex,
       onStepContinue: () {
         setState(() {
-          if (_stepperIndex < 2) {
+          if (_stepperIndex == 2) {
+            // Show loading indicator.
+            _showLoadingIndicator(buildContext: context);
+
+            // Simulate a 2-second delay.
+            Future.delayed(const Duration(seconds: 2), () {
+              // Remove the loading indicator.
+              Navigator.of(context).pop();
+            });
+          } else if (_stepperIndex < 2) {
             final int prevStepperIndex = _stepperIndex;
 
             // Update the current active stepper index.
@@ -77,23 +87,13 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
               isActive: false,
             );
           }
-          ;
-
-          if (_stepperIndex == 2) {
-            // Show loading indicator.
-            _showLoadingIndicator(buildContext: context);
-
-            // Simulate a 2-second delay.
-            Future.delayed(const Duration(seconds: 2), () {
-              // Remove the loading indicator.
-              Navigator.of(context).pop();
-            });
-          }
         });
       },
       onStepCancel: () {
         setState(() {
-          if (_stepperIndex > 0) {
+          if (_stepperIndex == 0) {
+            GoRouter.of(context).pop();
+          } else if (_stepperIndex > 0) {
             final int prevStepperIndex = _stepperIndex;
 
             // Update the current active stepper index.
@@ -147,6 +147,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: <Widget>[
+                  // TODO: Implement add user display photo feature.
+
                   // Username and username status checker.
                   Row(
                     children: <Widget>[
@@ -252,9 +254,36 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         Step(
           title: const Text('Delivery Address'),
           subtitle: const Text('Default address. Can be modified later.'),
-          content: const Text('Step 1 content'),
           state: _stepStates[1].stepState,
           isActive: _stepStates[1].isActive,
+          content: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: <Widget>[
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      // isDense: true,
+                      labelText: 'Country',
+                    ),
+                    // isDense: true,
+                    items: <DropdownMenuItem>[
+                      const DropdownMenuItem(
+                        child: Text('Ipil RH'),
+                        value: 'PH',
+                      ),
+                      const DropdownMenuItem(
+                        child: Text('Ipil RH'),
+                        value: 'PH',
+                      ),
+                    ],
+                    onChanged: (value) {},
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
 
         // Contact information.
