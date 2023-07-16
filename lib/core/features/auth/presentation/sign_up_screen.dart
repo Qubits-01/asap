@@ -1,4 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import '../../../../constants/entities/up_residence_hall_entities.dart';
+import '../domain/entities/up_residence_hall_entity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -41,6 +42,16 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   late int _stepperIndex;
   late List<_StepState> _stepStates;
 
+  // Step 2: Delivery Address.
+  // Delivery Address controllers.
+  late final TextEditingController _provinceTextController;
+  late final TextEditingController _cityOrMunicipalityTextController;
+  late final TextEditingController _barangayTextController;
+  late final TextEditingController _streetAndBuildingNameTextController;
+
+  late Map<String, bool> _isReadOnlyTextFields;
+  late Map<String, bool> _isEnabledTextFields;
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +62,37 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
       const _StepState(),
       const _StepState(),
     ];
+
+    // Step 2: Delivery Address.
+    // Delivery Address controllers.
+    _provinceTextController = TextEditingController();
+    _cityOrMunicipalityTextController = TextEditingController();
+    _barangayTextController = TextEditingController();
+    _streetAndBuildingNameTextController = TextEditingController();
+
+    _isReadOnlyTextFields = {
+      'Province': false,
+      'City or Municipality': false,
+      'Barangay': false,
+      'Street and Building Name': false,
+    };
+    _isEnabledTextFields = {
+      'Province': false,
+      'City or Municipality': false,
+      'Barangay': false,
+      'Street and Building Name': false,
+    };
+  }
+
+  @override
+  void dispose() {
+    // Delivery Address controllers.
+    _provinceTextController.dispose();
+    _cityOrMunicipalityTextController.dispose();
+    _barangayTextController.dispose();
+    _streetAndBuildingNameTextController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -261,24 +303,152 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: <Widget>[
-                  DropdownButtonFormField(
-                    decoration: InputDecoration(
+                  DropdownButtonFormField<UpResidenceHallEntity>(
+                    //hint: Text('Select a preset address'),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      // isDense: true,
-                      labelText: 'Country',
+                      isDense: true,
+                      labelText: 'Preset Address',
                     ),
-                    // isDense: true,
-                    items: <DropdownMenuItem>[
-                      const DropdownMenuItem(
+                    onChanged: (UpResidenceHallEntity? upResidenceHallEntity) {
+                      // Typecast the [upResidenceHallEntity] variable to a non-nullable type since
+                      // it will never be null due to the implementation of the [DropdownMenuItem]
+                      // value properties (i.e., they are non-nullable by design).
+                      upResidenceHallEntity as UpResidenceHallEntity;
+
+                      // At the first instance that the user selected a [DropdownMenuItem],
+                      // enable all the corresponding text fields.
+                      //
+                      // Note: There is no need to call for setState() here since it will be called
+                      // later on in this method either way.
+                      _isEnabledTextFields.forEach((key, bool value) {
+                        _isEnabledTextFields[key] = true;
+                      });
+
+                      if (upResidenceHallEntity.shortName ==
+                          '[ Other UP RH ]') {
+                        // Update the corresponding address fields (set to an empty string).
+                        _provinceTextController.text = '';
+                        _cityOrMunicipalityTextController.text = '';
+                        _barangayTextController.text = '';
+                        _streetAndBuildingNameTextController.text = '';
+
+                        setState(() {
+                          // Set the corresponding address fields to not read-only mode.
+                          // So that the user can input their own address.
+                          _isReadOnlyTextFields.forEach((key, bool value) {
+                            _isReadOnlyTextFields[key] = false;
+                          });
+                        });
+                      } else {
+                        // Update the corresponding address fields.
+                        _provinceTextController.text =
+                            upResidenceHallEntity.province;
+                        _cityOrMunicipalityTextController.text =
+                            upResidenceHallEntity.cityOrMunicipality;
+                        _barangayTextController.text =
+                            upResidenceHallEntity.barangay;
+                        _streetAndBuildingNameTextController.text =
+                            upResidenceHallEntity.streetAndBuildingName;
+
+                        // Set the corresponding address fields to read-only mode.
+                        setState(() {
+                          _isReadOnlyTextFields.forEach((key, bool value) {
+                            _isReadOnlyTextFields[key] = true;
+                          });
+                        });
+                      }
+                    },
+                    items: const <DropdownMenuItem<UpResidenceHallEntity>>[
+                      DropdownMenuItem(
+                        value: UpResidenceHallEntities.ipilRH,
                         child: Text('Ipil RH'),
-                        value: 'PH',
                       ),
-                      const DropdownMenuItem(
-                        child: Text('Ipil RH'),
-                        value: 'PH',
+                      DropdownMenuItem(
+                        value: UpResidenceHallEntities.yakalRH,
+                        child: Text('Yakal RH'),
+                      ),
+                      DropdownMenuItem(
+                        value: UpResidenceHallEntities.kalayaanRH,
+                        child: Text('Kalayaan RH'),
+                      ),
+                      DropdownMenuItem(
+                        value: UpResidenceHallEntities.acaciaRH,
+                        child: Text('Acacia RH'),
+                      ),
+                      DropdownMenuItem(
+                        value: UpResidenceHallEntities.otherUpRH,
+                        child: Text('Other Address'),
                       ),
                     ],
-                    onChanged: (value) {},
+                  ),
+                  const SizedBox(height: 8.0),
+
+                  // Horizontal divider.
+                  const Divider(),
+                  const SizedBox(height: 8.0),
+
+                  // TODO: Implement address dropdown selection.
+
+                  // Philippine province.
+                  TextFormField(
+                    controller: _provinceTextController,
+                    readOnly: _isReadOnlyTextFields['Province'] as bool,
+                    enabled: _isEnabledTextFields['Province'],
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'Province',
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+
+                  // Philippine city/municipality.
+                  TextFormField(
+                    controller: _cityOrMunicipalityTextController,
+                    readOnly:
+                        _isReadOnlyTextFields['City or Municipality'] as bool,
+                    enabled: _isEnabledTextFields['City or Municipality'],
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'City or Municipality',
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+
+                  // Philippine barangay.
+                  TextFormField(
+                    controller: _barangayTextController,
+                    readOnly: _isReadOnlyTextFields['Barangay'] as bool,
+                    enabled: _isEnabledTextFields['Barangay'],
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'Barangay',
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+
+                  // Philippine street and building name.
+                  TextFormField(
+                    controller: _streetAndBuildingNameTextController,
+                    readOnly: _isReadOnlyTextFields['Street and Building Name']
+                        as bool,
+                    enabled: _isEnabledTextFields['Street and Building Name'],
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'Street and Building Name',
+                    ),
                   ),
                 ],
               ),

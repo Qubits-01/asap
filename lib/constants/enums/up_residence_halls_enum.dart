@@ -1,3 +1,5 @@
+// This might be deprecated in the future in favor of the admin/seller side
+// creating the residence hall entities in the database.
 enum UpResidenceHalls {
   acacia(labelName: 'Acacia RH'),
   balayAtleta(labelName: 'Balay Atleta RH'),
