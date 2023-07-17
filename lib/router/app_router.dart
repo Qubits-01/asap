@@ -4,7 +4,7 @@ import '../core/features/auth/presentation/email_otp_verification_screen.dart';
 import '../core/features/auth/presentation/forgot_password_screen.dart';
 import '../core/features/auth/presentation/login_screen.dart';
 import '../core/features/auth/presentation/phone_number_otp_verification_screen.dart';
-import '../core/features/auth/presentation/sign_up_screen.dart';
+import '../core/features/auth/presentation/sign_up_screen/sign_up_screen.dart';
 import '../features/announcements/presentation/edit_announcement_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/splash_startup/presentation/splash_startup_screen.dart';

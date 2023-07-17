@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../features/home/presentation/home_screen.dart';
 import 'forgot_password_screen.dart';
-import 'sign_up_screen.dart';
+import 'sign_up_screen/sign_up_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
