@@ -3,10 +3,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../constants/entities/up_residence_hall_entities.dart';
 import '../../../../../constants/enums/username_status_enum.dart';
-import '../../../../../utils/loading_indicators_util.dart';
+import '../../../../../utils/general_dialog_boxes.dart';
 import '../../domain/entities/up_residence_hall_entity.dart';
 import 'helpers/sign_up_screen_step_state.dart';
 import 'helpers/user_information_form_data.dart';
+import 'sign_up_summary_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -19,15 +20,25 @@ class SignUpScreen extends StatelessWidget {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Sign Up'),
-        ),
-        body: const SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SignUpFormStepper(),
-            ],
+      child: WillPopScope(
+        onWillPop: () async {
+          return GeneralDialogBoxes.showYesOrNoAlert(
+            buildContext: context,
+            title: 'Are You Sure?',
+            contentMessage: 'Any progress made will be lost if you go back.',
+          );
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Sign Up'),
+          ),
+          body: const SingleChildScrollView(
+            // physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                SignUpFormStepper(),
+              ],
+            ),
           ),
         ),
       ),
@@ -69,13 +80,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   late final GlobalKey<FormState> _securityInformationFormKey;
 
   // Security Information controllers.
-  late final TextEditingController _phoneNumberTextController;
-  late final TextEditingController _emailAddressTextController;
   late final TextEditingController _passwordTextController;
-  late final TextEditingController _confirmPasswordTextController;
-
-  late bool _isPhoneNumberVerified;
-  late bool _isEmailAddressVerified;
 
   @override
   void initState() {
@@ -120,13 +125,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
     _securityInformationFormKey = GlobalKey<FormState>();
 
     // Security Information controllers.
-    _phoneNumberTextController = TextEditingController();
-    _emailAddressTextController = TextEditingController();
     _passwordTextController = TextEditingController();
-    _confirmPasswordTextController = TextEditingController();
-
-    _isPhoneNumberVerified = false;
-    _isEmailAddressVerified = false;
   }
 
   @override
@@ -150,10 +149,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
     _streetAndBuildingNameTextController.dispose();
 
     // Step 3. Security Information controllers.
-    _phoneNumberTextController.dispose();
-    _emailAddressTextController.dispose();
     _passwordTextController.dispose();
-    _confirmPasswordTextController.dispose();
 
     super.dispose();
   }
@@ -163,7 +159,6 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
     return Stepper(
       currentStep: _stepperIndex,
       onStepContinue: () {
-        final int prevStepperIndex = _stepperIndex;
         late final bool isCurrentFormValid;
         late bool isCompleteOrErrorStepState;
         late StepState currentStepState;
@@ -293,18 +288,39 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           // Security Information.
           case 2:
             {
-              // validate the corresponding form first.
+              // Validate the corresponding form first.
+              isCurrentFormValid =
+                  _securityInformationFormKey.currentState?.validate() as bool;
 
-              // Show loading indicator.
-              LoadingIndicatorsUtil.showSpinningCircleOnDialogBox(
-                buildContext: context,
-              );
+              if (isCurrentFormValid) {
+                // Update the current stepper state to a complete state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.complete,
+                  isActive: false,
+                );
 
-              // Simulate a 2-second delay.
-              Future.delayed(const Duration(seconds: 2), () {
-                // Remove the loading indicator.
-                Navigator.of(context).pop();
-              });
+                // Show loading indicator.
+                GeneralDialogBoxes.showLoadingSpinningCircle(
+                  buildContext: context,
+                );
+
+                // Simulate a 2-second delay.
+                Future.delayed(const Duration(seconds: 2), () {
+                  // Remove the loading indicator.
+                  Navigator.of(context).pop();
+
+                  // Navigate to the Sign Up Summary Screen.
+                  GoRouter.of(context).go(SignUpSummaryScreen.routeName);
+                });
+              } else {
+                // Update the current stepper state to an error state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.error,
+                  isActive: false,
+                );
+              }
 
               break;
             }
@@ -313,7 +329,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
           // an unwanted bit flips due to cosmic rays or any other rare phenomenons.
           default:
             {
-              // TODO: Implement an error dialog (to inform the user).
+              // TODO: Implement a fatal error dialog (to inform the user).
               break;
             }
         }
@@ -347,25 +363,77 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         });
       },
       onStepTapped: (int index) {
-        setState(() {
-          final int prevStepperIndex = _stepperIndex;
+        late final bool isOriginFormValid;
+        late bool isCompleteOrErrorStepState;
+        late StepState currentStepState;
 
-          // Update the current active stepper index.
-          _stepperIndex = index;
+        // Validate the origin form (step) first.
+        switch (_stepperIndex) {
+          // Coming from the User Information step.
+          case 0:
+            {
+              isOriginFormValid =
+                  _userInformationFormKey.currentState?.validate() as bool;
 
-          // Update the previous active step.
-          _stepStates[prevStepperIndex] =
-              _stepStates[prevStepperIndex].copyWith(
-            stepState: StepState.indexed,
+              break;
+            }
+
+          // Coming from the Delivery Address step.
+          case 1:
+            {
+              isOriginFormValid =
+                  _deliveryAddressFormKey.currentState?.validate() as bool;
+
+              break;
+            }
+
+          // Coming from the Security Information step.
+          case 2:
+            {
+              isOriginFormValid =
+                  _securityInformationFormKey.currentState?.validate() as bool;
+
+              break;
+            }
+
+          // This will never be reached. Just in case that there will be
+          // an unwanted bit flips due to cosmic rays or any other rare phenomenons.
+          default:
+            {
+              // TODO: Implement a fatal error dialog (to inform the user).
+              break;
+            }
+        }
+
+        if (isOriginFormValid) {
+          // Update the origin stepper state to a complete state.
+          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+            stepState: StepState.complete,
             isActive: false,
           );
+        } else {
+          // Update the origin stepper state to an error state.
+          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+            stepState: StepState.error,
+            isActive: false,
+          );
+        }
 
-          // Update the current active step.
+        // Update the _stepperIndex to the tapped index.
+        _stepperIndex = index;
+
+        // Update the tapped (destination) step's state into an editing state.
+        // Do not update if the tapped step is already complete or has an error.
+        currentStepState = _stepStates[_stepperIndex].stepState;
+        isCompleteOrErrorStepState = (currentStepState == StepState.complete) ||
+            (currentStepState == StepState.error);
+
+        if (!isCompleteOrErrorStepState) {
           _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
             stepState: StepState.editing,
             isActive: true,
           );
-        });
+        }
 
         // Rebuild.
         setState(() {});
@@ -758,132 +826,9 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Form(
+                key: _securityInformationFormKey,
                 child: Column(
                   children: <Widget>[
-                    // Phone number and verification status indicator.
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // Username.
-                        Expanded(
-                          child: TextFormField(
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              isDense: true,
-                              labelText: 'Phone Number',
-                            ),
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a your Phone Number.';
-                              } else if (value.length != 11) {
-                                return 'Please enter a valid Phone Number.';
-                              }
-
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 12.0),
-
-                        // Username status checker icon.
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: _isPhoneNumberVerified
-                              ? const Tooltip(
-                                  message: 'Phone number is verified.',
-                                  child: Icon(
-                                    Icons.info_outline_rounded,
-                                    color: Colors.green,
-                                  ),
-                                )
-                              : const Tooltip(
-                                  message: 'Phone number is not yet verified.',
-                                  child: Icon(Icons.info_outline_rounded),
-                                ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12.0),
-
-                    // Send Verification Code button (for phone number).
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.tonalIcon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.sms_outlined),
-                        label: const Text('Send Verification Code (SMS)'),
-                      ),
-                    ),
-
-                    Visibility(
-                      visible: true,
-                      child: Column(
-                        children: <Widget>[
-                          // Vertical spacing from the button above.
-                          const SizedBox(height: 12.0),
-
-                          // Verification code guiding message.
-                          Text(
-                            'A verification code was sent to 09369072458. '
-                            'Please enter the code below to verify your phone number.',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          const SizedBox(height: 12.0),
-
-                          // Resend verification code guiding message.
-                          Text(
-                            'Did not receive the code? '
-                            'You can send another code in 42 seconds.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                          ),
-                          const SizedBox(height: 12.0),
-
-                          // Confirm verification code.
-                          TextFormField(
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              isDense: true,
-                              labelText: 'Verification Code (SMS)',
-                            ),
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a your Email Address.';
-                              } else if (!value.contains('@')) {
-                                return 'Please enter a valid Email Address.';
-                              }
-
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12.0),
-
-                          // Confirm Verification Code button (for phone number).
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton.tonal(
-                              onPressed: () {},
-                              child: const Text('Confirm Verification Code'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-
-                    // Horizontal divider.
-                    const Divider(),
-                    const SizedBox(height: 8.0),
-
                     // Email address.
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
@@ -894,6 +839,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                         labelText: 'Email Address',
                       ),
                       validator: (String? value) {
+                        // TODO: Implement a proper regex for email validation.
+
                         if (value == null || value.isEmpty) {
                           return 'Please enter a your Email Address.';
                         } else if (!value.contains('@')) {
@@ -905,8 +852,36 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                     ),
                     const SizedBox(height: 16.0),
 
+                    // Phone number.
+                    TextFormField(
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                        labelText: 'Phone Number',
+                      ),
+                      validator: (String? value) {
+                        // TODO: Implement a regex for phone number validation.
+
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a your Phone Number.';
+                        } else if (value.length != 11) {
+                          return 'Please enter a valid Phone Number.';
+                        }
+
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 8.0),
+
+                    // Horizontal divider.
+                    const Divider(),
+                    const SizedBox(height: 8.0),
+
                     // Password.
                     TextFormField(
+                      controller: _passwordTextController,
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
                       textInputAction: TextInputAction.next,
@@ -916,6 +891,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                         labelText: 'Password',
                       ),
                       validator: (String? value) {
+                        // TODO: Implement a proper regex for password validation.
+
                         if (value == null || value.isEmpty) {
                           return 'Please enter a your Password.';
                         } else if (value.length < 8) {
@@ -940,6 +917,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please reenter your Password.';
+                        } else if (_passwordTextController.text != value) {
+                          return 'Passwords do not match.';
                         }
 
                         return null;

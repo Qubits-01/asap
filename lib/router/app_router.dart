@@ -5,6 +5,7 @@ import '../core/features/auth/presentation/forgot_password_screen.dart';
 import '../core/features/auth/presentation/login_screen.dart';
 import '../core/features/auth/presentation/phone_number_otp_verification_screen.dart';
 import '../core/features/auth/presentation/sign_up_screen/sign_up_screen.dart';
+import '../core/features/auth/presentation/sign_up_screen/sign_up_summary_screen.dart';
 import '../features/announcements/presentation/edit_announcement_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/splash_startup/presentation/splash_startup_screen.dart';
@@ -30,6 +31,10 @@ class AppRouter {
       GoRoute(
         path: SignUpScreen.routeName,
         builder: (_, __) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: SignUpSummaryScreen.routeName,
+        builder: (_, __) => const SignUpSummaryScreen(),
       ),
       GoRoute(
         path: ForgotPasswordScreen.routeName,
