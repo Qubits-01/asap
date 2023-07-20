@@ -158,6 +158,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   Widget build(BuildContext context) {
     return Stepper(
       currentStep: _stepperIndex,
+      physics: const NeverScrollableScrollPhysics(),
       onStepContinue: () {
         late final bool isCurrentFormValid;
         late bool isCompleteOrErrorStepState;
@@ -337,30 +338,183 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         // Rebuild.
         setState(() {});
       },
-      onStepCancel: () {
-        setState(() {
-          if (_stepperIndex == 0) {
-            GoRouter.of(context).pop();
-          } else if (_stepperIndex > 0) {
-            final int prevStepperIndex = _stepperIndex;
+      onStepCancel: () async {
+        late final bool isCurrentFormValid;
+        late bool isCompleteOrErrorStepState;
+        late StepState currentStepState;
 
-            // Update the current active stepper index.
-            _stepperIndex -= 1;
+        switch (_stepperIndex) {
+          // User Information.
+          case 0:
+            {
+              late final bool willCancelSignUpProcess;
 
-            // Update the previous active step.
-            _stepStates[prevStepperIndex] =
-                _stepStates[prevStepperIndex].copyWith(
-              stepState: StepState.indexed,
-              isActive: false,
-            );
+              // Ask the user if they really want to cancel the sign up process.
+              willCancelSignUpProcess =
+                  await GeneralDialogBoxes.showYesOrNoAlert(
+                buildContext: context,
+                title: 'Are You Sure?',
+                contentMessage:
+                    'Any progress made will be lost if you go back.',
+              );
 
-            // Update the current active step.
-            _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-              stepState: StepState.editing,
-              isActive: true,
-            );
-          }
-        });
+              // Go back to the login screen if the user wants to cancel the sign up process.
+              if (willCancelSignUpProcess) {
+                if (context.mounted) Navigator.of(context).pop();
+              }
+
+              // Validate the corresponding form.
+              isCurrentFormValid =
+                  _userInformationFormKey.currentState?.validate() as bool;
+
+              if (isCurrentFormValid) {
+                // Update the current stepper state to a complete state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.complete,
+                  isActive: false,
+                );
+              } else {
+                // Update the current stepper state to an error state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.error,
+                  isActive: false,
+                );
+              }
+
+              break;
+            }
+
+          // Delivery Address.
+          case 1:
+            {
+              // Validate the corresponding form first.
+              isCurrentFormValid =
+                  _deliveryAddressFormKey.currentState?.validate() as bool;
+
+              if (isCurrentFormValid) {
+                // Update the current stepper state to a complete state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.complete,
+                  isActive: false,
+                );
+              } else {
+                // Update the current stepper state to an error state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.error,
+                  isActive: false,
+                );
+              }
+
+              // Update the previous active step.
+              // Do not update if the previous step is already complete or has an error.
+              currentStepState = _stepStates[_stepperIndex].stepState;
+              isCompleteOrErrorStepState =
+                  (currentStepState == StepState.complete) ||
+                      (currentStepState == StepState.error);
+
+              if (!isCompleteOrErrorStepState) {
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.indexed,
+                  isActive: false,
+                );
+              }
+
+              // Update the current active stepper index.
+              _stepperIndex -= 1;
+
+              // Update the current active step.
+              // Do not update if the previous step is already complete or has an error.
+              currentStepState = _stepStates[_stepperIndex].stepState;
+              isCompleteOrErrorStepState =
+                  (currentStepState == StepState.complete) ||
+                      (currentStepState == StepState.error);
+
+              if (!isCompleteOrErrorStepState) {
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.editing,
+                  isActive: true,
+                );
+              }
+
+              break;
+            }
+
+          // Security Information.
+          case 2:
+            {
+              // Validate the corresponding form first.
+              isCurrentFormValid =
+                  _securityInformationFormKey.currentState?.validate() as bool;
+
+              if (isCurrentFormValid) {
+                // Update the current stepper state to a complete state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.complete,
+                  isActive: false,
+                );
+              } else {
+                // Update the current stepper state to an error state.
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.error,
+                  isActive: false,
+                );
+              }
+
+              // Update the previous active step.
+              // Do not update if the previous step is already complete or has an error.
+              currentStepState = _stepStates[_stepperIndex].stepState;
+              isCompleteOrErrorStepState =
+                  (currentStepState == StepState.complete) ||
+                      (currentStepState == StepState.error);
+
+              if (!isCompleteOrErrorStepState) {
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.indexed,
+                  isActive: false,
+                );
+              }
+
+              // Update the current active stepper index.
+              _stepperIndex -= 1;
+
+              // Update the current active step.
+              // Do not update if the previous step is already complete or has an error.
+              currentStepState = _stepStates[_stepperIndex].stepState;
+              isCompleteOrErrorStepState =
+                  (currentStepState == StepState.complete) ||
+                      (currentStepState == StepState.error);
+
+              if (!isCompleteOrErrorStepState) {
+                _stepStates[_stepperIndex] =
+                    _stepStates[_stepperIndex].copyWith(
+                  stepState: StepState.editing,
+                  isActive: true,
+                );
+              }
+
+              break;
+            }
+
+          // This will never be reached. Just in case that there will be
+          // an unwanted bit flips due to cosmic rays or any other rare phenomenons.
+          default:
+            {
+              // TODO: Implement a fatal error dialog (to inform the user).
+              break;
+            }
+        }
+
+        // Rebuild.
+        setState(() {});
       },
       onStepTapped: (int index) {
         late final bool isOriginFormValid;
