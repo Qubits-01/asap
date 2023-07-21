@@ -5,6 +5,7 @@ import '../../../../../constants/entities/up_residence_hall_entities.dart';
 import '../../../../../constants/enums/username_status_enum.dart';
 import '../../../../../utils/general_dialog_boxes.dart';
 import '../../domain/entities/up_residence_hall_entity.dart';
+import 'helpers/delivery_address_text_field_states.dart';
 import 'helpers/sign_up_screen_step_state.dart';
 import 'helpers/user_information_form_data.dart';
 import 'sign_up_summary_screen.dart';
@@ -73,8 +74,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   late final TextEditingController _barangayTextController;
   late final TextEditingController _streetAndBuildingNameTextController;
 
-  late Map<String, bool> _isReadOnlyTextFields;
-  late Map<String, bool> _isEnabledTextFields;
+  late DeliveryAddressTextFieldStates _deliveryAddressTextFieldStates;
 
   // Step 3: Security Information.
   late final GlobalKey<FormState> _securityInformationFormKey;
@@ -108,18 +108,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
     _barangayTextController = TextEditingController();
     _streetAndBuildingNameTextController = TextEditingController();
 
-    _isReadOnlyTextFields = {
-      'Province': false,
-      'City or Municipality': false,
-      'Barangay': false,
-      'Street and Building Name': false,
-    };
-    _isEnabledTextFields = {
-      'Province': false,
-      'City or Municipality': false,
-      'Barangay': false,
-      'Street and Building Name': false,
-    };
+    _deliveryAddressTextFieldStates = const DeliveryAddressTextFieldStates();
 
     // Step 3: Security Information.
     _securityInformationFormKey = GlobalKey<FormState>();
@@ -164,175 +153,61 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         late bool isCompleteOrErrorStepState;
         late StepState currentStepState;
 
-        switch (_stepperIndex) {
-          // User Information.
-          case 0:
-            {
-              // Validate the corresponding form first.
-              isCurrentFormValid =
-                  _userInformationFormKey.currentState?.validate() as bool;
+        // Validate the corresponding form first.
+        if (_stepperIndex == 0) {
+          isCurrentFormValid =
+              _userInformationFormKey.currentState?.validate() as bool;
+        } else if (_stepperIndex == 1) {
+          isCurrentFormValid =
+              _deliveryAddressFormKey.currentState?.validate() as bool;
+        } else if (_stepperIndex == 2) {
+          isCurrentFormValid =
+              _securityInformationFormKey.currentState?.validate() as bool;
+        }
 
-              if (isCurrentFormValid) {
-                // // Save the User Information form data (for later user - sign up submission).
-                // _userInformationFormKey.currentState?.save();
+        // Update the current step's state and its isActive status.
+        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+          stepState: isCurrentFormValid ? StepState.complete : StepState.error,
 
-                // Update the current stepper state to a complete state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.complete,
-                  isActive: false,
-                );
-              } else {
-                // Update the current stepper state to an error state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.error,
-                  isActive: false,
-                );
-              }
+          // Special case (User is in the last corresponding logical step).
+          isActive: _stepperIndex == 2 ? true : false,
+        );
 
-              // Update the previous active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
+        // Special case (User is in the last corresponding logical step).
+        if (_stepperIndex == 2) {
+          if (isCurrentFormValid) {
+            // Show loading indicator.
+            GeneralDialogBoxes.showLoadingSpinningCircle(
+              buildContext: context,
+            );
 
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.indexed,
-                  isActive: false,
-                );
-              }
+            // Simulate a 2-second delay.
+            Future.delayed(const Duration(seconds: 2), () {
+              // Remove the loading indicator.
+              Navigator.of(context).pop();
 
-              // Update the current active stepper index.
-              _stepperIndex += 1;
+              // Navigate to the Sign Up Summary Screen.
+              GoRouter.of(context).push(SignUpSummaryScreen.routeName);
+            });
+          }
+        } else {
+          // Update the stepper index.
+          _stepperIndex += 1;
 
-              // Update the current active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
+          // Update the destination step's state and its isActive status.
+          // Do not update if the destination step has already  a complete state
+          // or an error state.
+          currentStepState = _stepStates[_stepperIndex].stepState;
+          isCompleteOrErrorStepState =
+              (currentStepState == StepState.complete) ||
+                  (currentStepState == StepState.error);
 
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.editing,
-                  isActive: true,
-                );
-              }
-
-              break;
-            }
-
-          // Delivery Address.
-          case 1:
-            {
-              // Validate the corresponding form first.
-              isCurrentFormValid =
-                  _deliveryAddressFormKey.currentState?.validate() as bool;
-
-              if (isCurrentFormValid) {
-                // Update the current stepper state to a complete state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.complete,
-                  isActive: false,
-                );
-              } else {
-                // Update the current stepper state to an error state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.error,
-                  isActive: false,
-                );
-              }
-
-              // Update the previous active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
-
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.indexed,
-                  isActive: false,
-                );
-              }
-
-              // Update the current active stepper index.
-              _stepperIndex += 1;
-
-              // Update the current active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
-
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.editing,
-                  isActive: true,
-                );
-              }
-
-              break;
-            }
-
-          // Security Information.
-          case 2:
-            {
-              // Validate the corresponding form first.
-              isCurrentFormValid =
-                  _securityInformationFormKey.currentState?.validate() as bool;
-
-              if (isCurrentFormValid) {
-                // Update the current stepper state to a complete state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.complete,
-                  isActive: false,
-                );
-
-                // Show loading indicator.
-                GeneralDialogBoxes.showLoadingSpinningCircle(
-                  buildContext: context,
-                );
-
-                // Simulate a 2-second delay.
-                Future.delayed(const Duration(seconds: 2), () {
-                  // Remove the loading indicator.
-                  Navigator.of(context).pop();
-
-                  // Navigate to the Sign Up Summary Screen.
-                  GoRouter.of(context).go(SignUpSummaryScreen.routeName);
-                });
-              } else {
-                // Update the current stepper state to an error state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.error,
-                  isActive: false,
-                );
-              }
-
-              break;
-            }
-
-          // This will never be reached. Just in case that there will be
-          // an unwanted bit flips due to cosmic rays or any other rare phenomenons.
-          default:
-            {
-              // TODO: Implement a fatal error dialog (to inform the user).
-              break;
-            }
+          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+            stepState: isCompleteOrErrorStepState
+                ? currentStepState
+                : StepState.editing,
+            isActive: true,
+          );
         }
 
         // Rebuild.
@@ -342,236 +217,86 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         late final bool isCurrentFormValid;
         late bool isCompleteOrErrorStepState;
         late StepState currentStepState;
+        late final bool willCancelSignUpProcess;
 
-        switch (_stepperIndex) {
-          // User Information.
-          case 0:
-            {
-              late final bool willCancelSignUpProcess;
+        // Validate the corresponding form first.
+        if (_stepperIndex == 0) {
+          isCurrentFormValid =
+              _userInformationFormKey.currentState?.validate() as bool;
+        } else if (_stepperIndex == 1) {
+          isCurrentFormValid =
+              _deliveryAddressFormKey.currentState?.validate() as bool;
+        } else if (_stepperIndex == 2) {
+          isCurrentFormValid =
+              _securityInformationFormKey.currentState?.validate() as bool;
+        }
 
-              // Ask the user if they really want to cancel the sign up process.
-              willCancelSignUpProcess =
-                  await GeneralDialogBoxes.showYesOrNoAlert(
-                buildContext: context,
-                title: 'Are You Sure?',
-                contentMessage:
-                    'Any progress made will be lost if you go back.',
-              );
+        // Update the current step's state and its isActive status.
+        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+          stepState: isCurrentFormValid ? StepState.complete : StepState.error,
 
-              // Go back to the login screen if the user wants to cancel the sign up process.
-              if (willCancelSignUpProcess) {
-                if (context.mounted) Navigator.of(context).pop();
-              }
+          // Special case (User is in the last corresponding logical step).
+          isActive: _stepperIndex == 0 ? true : false,
+        );
 
-              // Validate the corresponding form.
-              isCurrentFormValid =
-                  _userInformationFormKey.currentState?.validate() as bool;
+        // Special case (User is in the last corresponding logical step).
+        if (_stepperIndex == 0) {
+          // Ask the user if they really want to cancel the sign up process.
+          willCancelSignUpProcess = await GeneralDialogBoxes.showYesOrNoAlert(
+            buildContext: context,
+            title: 'Are You Sure?',
+            contentMessage: 'Any progress made will be lost if you go back.',
+          );
 
-              if (isCurrentFormValid) {
-                // Update the current stepper state to a complete state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.complete,
-                  isActive: false,
-                );
-              } else {
-                // Update the current stepper state to an error state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.error,
-                  isActive: false,
-                );
-              }
+          // Go back to the login screen if the user wants to cancel the sign up process.
+          if (willCancelSignUpProcess) {
+            if (context.mounted) Navigator.of(context).pop();
+          }
+        } else {
+          // Update the stepper index.
+          _stepperIndex -= 1;
 
-              break;
-            }
+          // Update the destination step's state and its isActive status.
+          // Do not update if the destination step has already  a complete state
+          // or an error state.
+          currentStepState = _stepStates[_stepperIndex].stepState;
+          isCompleteOrErrorStepState =
+              (currentStepState == StepState.complete) ||
+                  (currentStepState == StepState.error);
 
-          // Delivery Address.
-          case 1:
-            {
-              // Validate the corresponding form first.
-              isCurrentFormValid =
-                  _deliveryAddressFormKey.currentState?.validate() as bool;
-
-              if (isCurrentFormValid) {
-                // Update the current stepper state to a complete state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.complete,
-                  isActive: false,
-                );
-              } else {
-                // Update the current stepper state to an error state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.error,
-                  isActive: false,
-                );
-              }
-
-              // Update the previous active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
-
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.indexed,
-                  isActive: false,
-                );
-              }
-
-              // Update the current active stepper index.
-              _stepperIndex -= 1;
-
-              // Update the current active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
-
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.editing,
-                  isActive: true,
-                );
-              }
-
-              break;
-            }
-
-          // Security Information.
-          case 2:
-            {
-              // Validate the corresponding form first.
-              isCurrentFormValid =
-                  _securityInformationFormKey.currentState?.validate() as bool;
-
-              if (isCurrentFormValid) {
-                // Update the current stepper state to a complete state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.complete,
-                  isActive: false,
-                );
-              } else {
-                // Update the current stepper state to an error state.
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.error,
-                  isActive: false,
-                );
-              }
-
-              // Update the previous active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
-
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.indexed,
-                  isActive: false,
-                );
-              }
-
-              // Update the current active stepper index.
-              _stepperIndex -= 1;
-
-              // Update the current active step.
-              // Do not update if the previous step is already complete or has an error.
-              currentStepState = _stepStates[_stepperIndex].stepState;
-              isCompleteOrErrorStepState =
-                  (currentStepState == StepState.complete) ||
-                      (currentStepState == StepState.error);
-
-              if (!isCompleteOrErrorStepState) {
-                _stepStates[_stepperIndex] =
-                    _stepStates[_stepperIndex].copyWith(
-                  stepState: StepState.editing,
-                  isActive: true,
-                );
-              }
-
-              break;
-            }
-
-          // This will never be reached. Just in case that there will be
-          // an unwanted bit flips due to cosmic rays or any other rare phenomenons.
-          default:
-            {
-              // TODO: Implement a fatal error dialog (to inform the user).
-              break;
-            }
+          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+            stepState: isCompleteOrErrorStepState
+                ? currentStepState
+                : StepState.editing,
+            isActive: true,
+          );
         }
 
         // Rebuild.
         setState(() {});
       },
       onStepTapped: (int index) {
-        late final bool isOriginFormValid;
+        late final bool isCurrentFormValid;
         late bool isCompleteOrErrorStepState;
         late StepState currentStepState;
 
-        // Validate the origin form (step) first.
-        switch (_stepperIndex) {
-          // Coming from the User Information step.
-          case 0:
-            {
-              isOriginFormValid =
-                  _userInformationFormKey.currentState?.validate() as bool;
-
-              break;
-            }
-
-          // Coming from the Delivery Address step.
-          case 1:
-            {
-              isOriginFormValid =
-                  _deliveryAddressFormKey.currentState?.validate() as bool;
-
-              break;
-            }
-
-          // Coming from the Security Information step.
-          case 2:
-            {
-              isOriginFormValid =
-                  _securityInformationFormKey.currentState?.validate() as bool;
-
-              break;
-            }
-
-          // This will never be reached. Just in case that there will be
-          // an unwanted bit flips due to cosmic rays or any other rare phenomenons.
-          default:
-            {
-              // TODO: Implement a fatal error dialog (to inform the user).
-              break;
-            }
+        // Validate the current form (step) first.
+        if (_stepperIndex == 0) {
+          isCurrentFormValid =
+              _userInformationFormKey.currentState?.validate() as bool;
+        } else if (_stepperIndex == 1) {
+          isCurrentFormValid =
+              _deliveryAddressFormKey.currentState?.validate() as bool;
+        } else if (_stepperIndex == 2) {
+          isCurrentFormValid =
+              _securityInformationFormKey.currentState?.validate() as bool;
         }
 
-        if (isOriginFormValid) {
-          // Update the origin stepper state to a complete state.
-          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-            stepState: StepState.complete,
-            isActive: false,
-          );
-        } else {
-          // Update the origin stepper state to an error state.
-          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-            stepState: StepState.error,
-            isActive: false,
-          );
-        }
+        // Update the current step's state and its isActive status.
+        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+          stepState: isCurrentFormValid ? StepState.complete : StepState.error,
+          isActive: false,
+        );
 
         // Update the _stepperIndex to the tapped index.
         _stepperIndex = index;
@@ -582,12 +307,11 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
         isCompleteOrErrorStepState = (currentStepState == StepState.complete) ||
             (currentStepState == StepState.error);
 
-        if (!isCompleteOrErrorStepState) {
-          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-            stepState: StepState.editing,
-            isActive: true,
-          );
-        }
+        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
+          stepState:
+              isCompleteOrErrorStepState ? currentStepState : StepState.editing,
+          isActive: true,
+        );
 
         // Rebuild.
         setState(() {});
@@ -783,8 +507,9 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                         isDense: true,
                         labelText: 'Preset Address',
                       ),
-                      onChanged:
-                          (UpResidenceHallEntity? upResidenceHallEntity) {
+                      onChanged: (
+                        UpResidenceHallEntity? upResidenceHallEntity,
+                      ) {
                         // Typecast the [upResidenceHallEntity] variable to a non-nullable type since
                         // it will never be null due to the implementation of the [DropdownMenuItem]
                         // value properties (i.e., they are non-nullable by design).
@@ -795,9 +520,27 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                         //
                         // Note: There is no need to call for setState() here since it will be called
                         // later on in this method either way.
-                        _isEnabledTextFields.forEach((key, bool value) {
-                          _isEnabledTextFields[key] = true;
-                        });
+                        _deliveryAddressTextFieldStates =
+                            _deliveryAddressTextFieldStates.copyWith(
+                          province:
+                              _deliveryAddressTextFieldStates.province.copyWith(
+                            isEnabled: true,
+                          ),
+                          cityOrMunicipality: _deliveryAddressTextFieldStates
+                              .cityOrMunicipality
+                              .copyWith(
+                            isEnabled: true,
+                          ),
+                          barangay:
+                              _deliveryAddressTextFieldStates.barangay.copyWith(
+                            isEnabled: true,
+                          ),
+                          streetAndBuildingName: _deliveryAddressTextFieldStates
+                              .streetAndBuildingName
+                              .copyWith(
+                            isEnabled: true,
+                          ),
+                        );
 
                         if (upResidenceHallEntity.shortName ==
                             '[ Other UP RH ]') {
@@ -813,9 +556,28 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
 
                           // Set the corresponding address fields to not read-only mode.
                           // So that the user can input their own address.
-                          _isReadOnlyTextFields.forEach((key, bool value) {
-                            _isReadOnlyTextFields[key] = false;
-                          });
+                          _deliveryAddressTextFieldStates =
+                              _deliveryAddressTextFieldStates.copyWith(
+                            province: _deliveryAddressTextFieldStates.province
+                                .copyWith(
+                              isReadOnly: false,
+                            ),
+                            cityOrMunicipality: _deliveryAddressTextFieldStates
+                                .cityOrMunicipality
+                                .copyWith(
+                              isReadOnly: false,
+                            ),
+                            barangay: _deliveryAddressTextFieldStates.barangay
+                                .copyWith(
+                              isReadOnly: false,
+                            ),
+                            streetAndBuildingName:
+                                _deliveryAddressTextFieldStates
+                                    .streetAndBuildingName
+                                    .copyWith(
+                              isReadOnly: false,
+                            ),
+                          );
                         } else {
                           // Update the corresponding address fields.
                           _provinceTextController.text =
@@ -828,9 +590,28 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                               upResidenceHallEntity.streetAndBuildingName;
 
                           // Set the corresponding address fields to read-only mode.
-                          _isReadOnlyTextFields.forEach((key, bool value) {
-                            _isReadOnlyTextFields[key] = true;
-                          });
+                          _deliveryAddressTextFieldStates =
+                              _deliveryAddressTextFieldStates.copyWith(
+                            province: _deliveryAddressTextFieldStates.province
+                                .copyWith(
+                              isReadOnly: true,
+                            ),
+                            cityOrMunicipality: _deliveryAddressTextFieldStates
+                                .cityOrMunicipality
+                                .copyWith(
+                              isReadOnly: true,
+                            ),
+                            barangay: _deliveryAddressTextFieldStates.barangay
+                                .copyWith(
+                              isReadOnly: true,
+                            ),
+                            streetAndBuildingName:
+                                _deliveryAddressTextFieldStates
+                                    .streetAndBuildingName
+                                    .copyWith(
+                              isReadOnly: true,
+                            ),
+                          );
                         }
 
                         // Rebuild.
@@ -877,8 +658,10 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                     // Philippine province.
                     TextFormField(
                       controller: _provinceTextController,
-                      readOnly: _isReadOnlyTextFields['Province'] as bool,
-                      enabled: _isEnabledTextFields['Province'],
+                      readOnly:
+                          _deliveryAddressTextFieldStates.province.isReadOnly,
+                      enabled:
+                          _deliveryAddressTextFieldStates.province.isEnabled,
                       keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
@@ -899,9 +682,10 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                     // Philippine city/municipality.
                     TextFormField(
                       controller: _cityOrMunicipalityTextController,
-                      readOnly:
-                          _isReadOnlyTextFields['City or Municipality'] as bool,
-                      enabled: _isEnabledTextFields['City or Municipality'],
+                      readOnly: _deliveryAddressTextFieldStates
+                          .cityOrMunicipality.isReadOnly,
+                      enabled: _deliveryAddressTextFieldStates
+                          .cityOrMunicipality.isEnabled,
                       keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
@@ -922,8 +706,10 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                     // Philippine barangay.
                     TextFormField(
                       controller: _barangayTextController,
-                      readOnly: _isReadOnlyTextFields['Barangay'] as bool,
-                      enabled: _isEnabledTextFields['Barangay'],
+                      readOnly:
+                          _deliveryAddressTextFieldStates.barangay.isReadOnly,
+                      enabled:
+                          _deliveryAddressTextFieldStates.barangay.isEnabled,
                       keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
@@ -944,10 +730,10 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                     // Philippine street and building name.
                     TextFormField(
                       controller: _streetAndBuildingNameTextController,
-                      readOnly:
-                          _isReadOnlyTextFields['Street and Building Name']
-                              as bool,
-                      enabled: _isEnabledTextFields['Street and Building Name'],
+                      readOnly: _deliveryAddressTextFieldStates
+                          .streetAndBuildingName.isReadOnly,
+                      enabled: _deliveryAddressTextFieldStates
+                          .streetAndBuildingName.isEnabled,
                       keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
