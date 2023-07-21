@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../../../utils/general_dialog_boxes.dart';
 import '../helpers/sign_up_screen_step_state.dart';
-import '../sign_up_summary_screen.dart';
 
-class OnStepContinue {
-  const OnStepContinue();
+class OnStepCancel {
+  const OnStepCancel();
 
-  // TODO: Re-examine the dependency injection for static members of a class
-  // (e.g. GoRouter.of, static methods, etc.). Determine if dependency injection
-  // can be used for it.
-
-  void call({
+  Future<void> call({
     required BuildContext buildContext,
     required List<int> stepperIndex,
     required List<GlobalKey<FormState>> formKeys,
     required List<SignUpScreenStepState> stepStates,
     required void Function() setState,
-  }) {
+  }) async {
     late final bool isCurrentFormValid;
-    late final bool isCompleteOrErrorStepState;
-    late final StepState currentStepState;
+    late bool isCompleteOrErrorStepState;
+    late StepState currentStepState;
+    late final bool willCancelSignUpProcess;
     late int thisStepperIndex;
 
     // For code readability purposes.
@@ -36,29 +31,25 @@ class OnStepContinue {
       stepState: isCurrentFormValid ? StepState.complete : StepState.error,
 
       // Special case (User is in the last corresponding logical step).
-      isActive: thisStepperIndex == 2 ? true : false,
+      isActive: thisStepperIndex == 0 ? true : false,
     );
 
     // Special case (User is in the last corresponding logical step).
-    if (thisStepperIndex == 2) {
-      if (isCurrentFormValid) {
-        // Show loading indicator.
-        GeneralDialogBoxes.showLoadingSpinningCircle(
-          buildContext: buildContext,
-        );
+    if (thisStepperIndex == 0) {
+      // Ask the user if they really want to cancel the sign up process.
+      willCancelSignUpProcess = await GeneralDialogBoxes.showYesOrNoAlert(
+        buildContext: buildContext,
+        title: 'Are You Sure?',
+        contentMessage: 'Any progress made will be lost if you go back.',
+      );
 
-        // Simulate a 2-second delay.
-        Future.delayed(const Duration(seconds: 2), () {
-          // Remove the loading indicator.
-          Navigator.of(buildContext).pop();
-
-          // Navigate to the Sign Up Summary Screen.
-          GoRouter.of(buildContext).push(SignUpSummaryScreen.routeName);
-        });
+      // Go back to the login screen if the user wants to cancel the sign up process.
+      if (willCancelSignUpProcess) {
+        if (buildContext.mounted) Navigator.of(buildContext).pop();
       }
     } else {
       // Update the stepper index.
-      thisStepperIndex += 1;
+      thisStepperIndex -= 1;
 
       // Update the destination step's state and its isActive status.
       // Do not update if the destination step has already  a complete state

@@ -1,3 +1,6 @@
+import 'package:ate_kens_food_delivery/core/features/auth/presentation/sign_up_screen/widgets/on_step_cancel.dart';
+import 'package:ate_kens_food_delivery/core/features/auth/presentation/sign_up_screen/widgets/on_step_continue.dart';
+import 'package:ate_kens_food_delivery/core/features/auth/presentation/sign_up_screen/widgets/on_step_tapped.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -55,7 +58,10 @@ class SignUpFormStepper extends StatefulWidget {
 }
 
 class _SignUpFormStepperState extends State<SignUpFormStepper> {
-  late int _stepperIndex;
+  // The [stepperIndex] variable is a list of integer because it is needed
+  // to be passed by reference (especially useful when refactoring the code
+  // in the onStep callbacks of the Stepper widget).
+  late List<int> _stepperIndex;
   late List<SignUpScreenStepState> _stepStates;
   late UserInformationFormData _userInformationFormData;
 
@@ -82,11 +88,16 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   // Security Information controllers.
   late final TextEditingController _passwordTextController;
 
+  // OnStep callbacks for the [Stepper] widget.
+  late OnStepContinue _onStepContinue;
+  late OnStepCancel _onStepCancel;
+  late OnStepTapped _onStepTapped;
+
   @override
   void initState() {
     super.initState();
 
-    _stepperIndex = 0;
+    _stepperIndex = [0];
     _stepStates = <SignUpScreenStepState>[
       const SignUpScreenStepState(stepState: StepState.editing, isActive: true),
       const SignUpScreenStepState(),
@@ -115,6 +126,11 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
 
     // Security Information controllers.
     _passwordTextController = TextEditingController();
+
+    // OnStep callbacks for the [Stepper] widget.
+    _onStepContinue = const OnStepContinue();
+    _onStepCancel = const OnStepCancel();
+    _onStepTapped = const OnStepTapped();
   }
 
   @override
@@ -146,175 +162,46 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   @override
   Widget build(BuildContext context) {
     return Stepper(
-      currentStep: _stepperIndex,
+      currentStep: _stepperIndex[0],
       physics: const NeverScrollableScrollPhysics(),
       onStepContinue: () {
-        late final bool isCurrentFormValid;
-        late bool isCompleteOrErrorStepState;
-        late StepState currentStepState;
-
-        // Validate the corresponding form first.
-        if (_stepperIndex == 0) {
-          isCurrentFormValid =
-              _userInformationFormKey.currentState?.validate() as bool;
-        } else if (_stepperIndex == 1) {
-          isCurrentFormValid =
-              _deliveryAddressFormKey.currentState?.validate() as bool;
-        } else if (_stepperIndex == 2) {
-          isCurrentFormValid =
-              _securityInformationFormKey.currentState?.validate() as bool;
-        }
-
-        // Update the current step's state and its isActive status.
-        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-          stepState: isCurrentFormValid ? StepState.complete : StepState.error,
-
-          // Special case (User is in the last corresponding logical step).
-          isActive: _stepperIndex == 2 ? true : false,
+        _onStepContinue(
+          buildContext: context,
+          stepperIndex: _stepperIndex,
+          formKeys: <GlobalKey<FormState>>[
+            _userInformationFormKey,
+            _deliveryAddressFormKey,
+            _securityInformationFormKey,
+          ],
+          stepStates: _stepStates,
+          setState: () => setState(() {}),
         );
-
-        // Special case (User is in the last corresponding logical step).
-        if (_stepperIndex == 2) {
-          if (isCurrentFormValid) {
-            // Show loading indicator.
-            GeneralDialogBoxes.showLoadingSpinningCircle(
-              buildContext: context,
-            );
-
-            // Simulate a 2-second delay.
-            Future.delayed(const Duration(seconds: 2), () {
-              // Remove the loading indicator.
-              Navigator.of(context).pop();
-
-              // Navigate to the Sign Up Summary Screen.
-              GoRouter.of(context).push(SignUpSummaryScreen.routeName);
-            });
-          }
-        } else {
-          // Update the stepper index.
-          _stepperIndex += 1;
-
-          // Update the destination step's state and its isActive status.
-          // Do not update if the destination step has already  a complete state
-          // or an error state.
-          currentStepState = _stepStates[_stepperIndex].stepState;
-          isCompleteOrErrorStepState =
-              (currentStepState == StepState.complete) ||
-                  (currentStepState == StepState.error);
-
-          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-            stepState: isCompleteOrErrorStepState
-                ? currentStepState
-                : StepState.editing,
-            isActive: true,
-          );
-        }
-
-        // Rebuild.
-        setState(() {});
       },
-      onStepCancel: () async {
-        late final bool isCurrentFormValid;
-        late bool isCompleteOrErrorStepState;
-        late StepState currentStepState;
-        late final bool willCancelSignUpProcess;
-
-        // Validate the corresponding form first.
-        if (_stepperIndex == 0) {
-          isCurrentFormValid =
-              _userInformationFormKey.currentState?.validate() as bool;
-        } else if (_stepperIndex == 1) {
-          isCurrentFormValid =
-              _deliveryAddressFormKey.currentState?.validate() as bool;
-        } else if (_stepperIndex == 2) {
-          isCurrentFormValid =
-              _securityInformationFormKey.currentState?.validate() as bool;
-        }
-
-        // Update the current step's state and its isActive status.
-        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-          stepState: isCurrentFormValid ? StepState.complete : StepState.error,
-
-          // Special case (User is in the last corresponding logical step).
-          isActive: _stepperIndex == 0 ? true : false,
+      onStepCancel: () {
+        _onStepCancel(
+          buildContext: context,
+          stepperIndex: _stepperIndex,
+          formKeys: <GlobalKey<FormState>>[
+            _userInformationFormKey,
+            _deliveryAddressFormKey,
+            _securityInformationFormKey,
+          ],
+          stepStates: _stepStates,
+          setState: () => setState(() {}),
         );
-
-        // Special case (User is in the last corresponding logical step).
-        if (_stepperIndex == 0) {
-          // Ask the user if they really want to cancel the sign up process.
-          willCancelSignUpProcess = await GeneralDialogBoxes.showYesOrNoAlert(
-            buildContext: context,
-            title: 'Are You Sure?',
-            contentMessage: 'Any progress made will be lost if you go back.',
-          );
-
-          // Go back to the login screen if the user wants to cancel the sign up process.
-          if (willCancelSignUpProcess) {
-            if (context.mounted) Navigator.of(context).pop();
-          }
-        } else {
-          // Update the stepper index.
-          _stepperIndex -= 1;
-
-          // Update the destination step's state and its isActive status.
-          // Do not update if the destination step has already  a complete state
-          // or an error state.
-          currentStepState = _stepStates[_stepperIndex].stepState;
-          isCompleteOrErrorStepState =
-              (currentStepState == StepState.complete) ||
-                  (currentStepState == StepState.error);
-
-          _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-            stepState: isCompleteOrErrorStepState
-                ? currentStepState
-                : StepState.editing,
-            isActive: true,
-          );
-        }
-
-        // Rebuild.
-        setState(() {});
       },
       onStepTapped: (int index) {
-        late final bool isCurrentFormValid;
-        late bool isCompleteOrErrorStepState;
-        late StepState currentStepState;
-
-        // Validate the current form (step) first.
-        if (_stepperIndex == 0) {
-          isCurrentFormValid =
-              _userInformationFormKey.currentState?.validate() as bool;
-        } else if (_stepperIndex == 1) {
-          isCurrentFormValid =
-              _deliveryAddressFormKey.currentState?.validate() as bool;
-        } else if (_stepperIndex == 2) {
-          isCurrentFormValid =
-              _securityInformationFormKey.currentState?.validate() as bool;
-        }
-
-        // Update the current step's state and its isActive status.
-        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-          stepState: isCurrentFormValid ? StepState.complete : StepState.error,
-          isActive: false,
+        _onStepTapped(
+          stepperIndex: _stepperIndex,
+          newIndex: index,
+          formKeys: <GlobalKey<FormState>>[
+            _userInformationFormKey,
+            _deliveryAddressFormKey,
+            _securityInformationFormKey,
+          ],
+          stepStates: _stepStates,
+          setState: () => setState(() {}),
         );
-
-        // Update the _stepperIndex to the tapped index.
-        _stepperIndex = index;
-
-        // Update the tapped (destination) step's state into an editing state.
-        // Do not update if the tapped step is already complete or has an error.
-        currentStepState = _stepStates[_stepperIndex].stepState;
-        isCompleteOrErrorStepState = (currentStepState == StepState.complete) ||
-            (currentStepState == StepState.error);
-
-        _stepStates[_stepperIndex] = _stepStates[_stepperIndex].copyWith(
-          stepState:
-              isCompleteOrErrorStepState ? currentStepState : StepState.editing,
-          isActive: true,
-        );
-
-        // Rebuild.
-        setState(() {});
       },
       steps: <Step>[
         // User information.
