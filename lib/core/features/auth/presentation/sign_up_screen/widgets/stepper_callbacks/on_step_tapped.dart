@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../helpers/sign_up_screen_step_state.dart';
+import '../../helpers/sign_up_screen_step_state.dart';
 
 class OnStepTapped {
   const OnStepTapped();

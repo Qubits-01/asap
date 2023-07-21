@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../utils/general_dialog_boxes.dart';
-import '../helpers/sign_up_screen_step_state.dart';
+import '../../../../../../../utils/general_dialog_boxes.dart';
+import '../../helpers/sign_up_screen_step_state.dart';
 
 class OnStepCancel {
   const OnStepCancel();

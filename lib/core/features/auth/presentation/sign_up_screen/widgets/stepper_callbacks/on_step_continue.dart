@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../utils/general_dialog_boxes.dart';
-import '../helpers/sign_up_screen_step_state.dart';
-import '../sign_up_summary_screen.dart';
+import '../../../../../../../utils/general_dialog_boxes.dart';
+import '../../helpers/sign_up_screen_step_state.dart';
+import '../../sign_up_summary_screen.dart';
 
 class OnStepContinue {
   const OnStepContinue();
