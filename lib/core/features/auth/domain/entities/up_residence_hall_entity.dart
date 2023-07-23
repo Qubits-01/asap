@@ -1,10 +1,10 @@
-import '../../../../../interfaces/entity_interface.dart';
+import '../../../../../interfaces/entity_intf.dart';
 import 'address_entity.dart';
 
 /// This class is immutable by design in order to prevent accidental changes.
 /// If you need to change the fields, then you must create a new instance of
 /// this class alongside with the new field values.
-class UpResidenceHallEntity implements EntityInterface {
+class UpResidenceHallEntity implements EntityIntf {
   const UpResidenceHallEntity({
     required String completeName,
     required String shortName,

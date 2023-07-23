@@ -1,9 +1,9 @@
-import '../../../../../interfaces/entity_interface.dart';
+import '../../../../../interfaces/entity_intf.dart';
 
 /// This class is immutable by design in order to prevent accidental changes.
 /// If you need to change the fields, then you must create a new instance of
 /// this class alongside with the new field values.
-class AddressEntity implements EntityInterface {
+class AddressEntity implements EntityIntf {
   const AddressEntity({
     required String province,
     required String cityOrMunicipality,

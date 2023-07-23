@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../constants/enums/username_status_enum.dart';
-import '../helpers/user_information_form_data.dart';
+import '../../../../../../../constants/enums/username_status_enum.dart';
+import '../../helpers/form_data/user_information_form_data.dart';
 
 class UserInformationForm extends StatefulWidget {
   const UserInformationForm({

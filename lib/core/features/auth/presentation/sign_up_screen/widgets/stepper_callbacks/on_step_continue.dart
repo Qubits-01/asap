@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../../utils/general_dialog_boxes.dart';
 import '../../helpers/sign_up_screen_step_state.dart';
 import '../../sign_up_summary_screen.dart';
 
@@ -23,6 +22,7 @@ class OnStepContinue {
     late final bool isCompleteOrErrorStepState;
     late final StepState currentStepState;
     late int thisStepperIndex;
+    late final bool areAllFormsValid;
 
     // For code readability purposes.
     thisStepperIndex = stepperIndex[0];
@@ -41,20 +41,19 @@ class OnStepContinue {
 
     // Special case (User is in the last corresponding logical step).
     if (thisStepperIndex == 2) {
-      if (isCurrentFormValid) {
-        // Show loading indicator.
-        GeneralDialogBoxes.showLoadingSpinningCircle(
-          buildContext: buildContext,
-        );
+      // Determine if all forms are valid.
+      areAllFormsValid = formKeys.every(
+        (formKey) => formKey.currentState?.validate() as bool,
+      );
 
-        // Simulate a 2-second delay.
-        Future.delayed(const Duration(seconds: 2), () {
-          // Remove the loading indicator.
-          Navigator.of(buildContext).pop();
+      if (areAllFormsValid) {
+        // Save all of the form data locally.
+        for (final GlobalKey<FormState> formKey in formKeys) {
+          formKey.currentState?.save();
+        }
 
-          // Navigate to the Sign Up Summary Screen.
-          GoRouter.of(buildContext).push(SignUpSummaryScreen.routeName);
-        });
+        // Navigate to the Sign Up Summary Screen.
+        GoRouter.of(buildContext).push(SignUpSummaryScreen.routeName);
       }
     } else {
       // Update the stepper index.
