@@ -1,7 +1,6 @@
-import 'package:ate_kens_food_delivery/core/exception_handling/exceptions/local_storage_exception.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/exception_handling/exceptions/local_storage_exception.dart';
 import 'interfaces/local_storage_data_source_intf.dart';
 
 class LocalStorageDataSource implements LocalStorageDataSourceIntf {
@@ -32,7 +31,7 @@ class LocalStorageDataSource implements LocalStorageDataSourceIntf {
       value = _sharedPreferences.getStringList(key) as T?;
     } else {
       throw LocalStorageException(
-        title: 'Local Storage Exception',
+        title: 'Local Storage',
         message:
             'LocalStorageDataSource.getData: Unsupported type: ${T.runtimeType}',
         stackTrace: StackTrace.current,
@@ -43,7 +42,7 @@ class LocalStorageDataSource implements LocalStorageDataSourceIntf {
     // This means that the key does not exist in the local storage.
     if (value == null) {
       throw LocalStorageException(
-        title: 'Local Storage Exception',
+        title: 'Local Storage',
         message:
             'LocalStorageDataSource.getData: The key does not exist in the local storage.',
         stackTrace: StackTrace.current,
@@ -77,7 +76,7 @@ class LocalStorageDataSource implements LocalStorageDataSourceIntf {
         await _sharedPreferences.setStringList(key, value as List<String>);
       } else {
         throw LocalStorageException(
-          title: 'Local Storage Exception',
+          title: 'Local Storage',
           message:
               'LocalStorageDataSource.getData: Unsupported type: ${T.runtimeType}',
           stackTrace: StackTrace.current,
@@ -85,7 +84,7 @@ class LocalStorageDataSource implements LocalStorageDataSourceIntf {
       }
     } catch (e, stackTrace) {
       throw LocalStorageException(
-        title: 'Local Storage Exception',
+        title: 'Local Storage',
         message: 'LocalStorageDataSource.saveData: $e'
             '\n[$stackTrace]',
         stackTrace: stackTrace,
