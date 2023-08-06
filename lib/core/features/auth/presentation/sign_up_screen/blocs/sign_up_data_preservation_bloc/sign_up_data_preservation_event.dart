@@ -15,23 +15,23 @@ final class SignUpDataPreservationContinueButtonPressed
     extends SignUpDataPreservationEvent {
   const SignUpDataPreservationContinueButtonPressed({
     // User Information.
-    String? username,
-    String? firstName,
-    String? middleInitial,
-    String? lastName,
+    required String username,
+    required String firstName,
+    required String middleInitial,
+    required String lastName,
     String? suffix,
 
     // Address Information.
-    String? presetAddressTag,
-    String? province,
-    String? cityOrMunicipality,
-    String? barangay,
-    String? streetAndBuildingName,
+    required String presetAddressTag,
+    required String province,
+    required String cityOrMunicipality,
+    required String barangay,
+    required String streetAndBuildingName,
 
     // Security Information.
-    String? emailAddress,
-    String? phoneNumber,
-    String? password,
+    required String emailAddress,
+    required String phoneNumber,
+    required String password,
   })  : _username = username,
         _firstName = firstName,
         _middleInitial = middleInitial,
@@ -47,32 +47,33 @@ final class SignUpDataPreservationContinueButtonPressed
         _password = password;
 
   // User Information.
-  final String? _username, _firstName, _middleInitial, _lastName, _suffix;
+  final String _username, _firstName, _middleInitial, _lastName;
+  final String? _suffix;
 
   // Address Information.
-  final String? _presetAddressTag,
+  final String _presetAddressTag,
       _province,
       _cityOrMunicipality,
       _barangay,
       _streetAndBuildingName;
 
   // Security Information.
-  final String? _emailAddress, _phoneNumber, _password;
+  final String _emailAddress, _phoneNumber, _password;
 
   // Getters.
-  String? get username => _username;
-  String? get firstName => _firstName;
-  String? get middleInitial => _middleInitial;
-  String? get lastName => _lastName;
+  String get username => _username;
+  String get firstName => _firstName;
+  String get middleInitial => _middleInitial;
+  String get lastName => _lastName;
   String? get suffix => _suffix;
-  String? get presetAddressTag => _presetAddressTag;
-  String? get province => _province;
-  String? get cityOrMunicipality => _cityOrMunicipality;
-  String? get barangay => _barangay;
-  String? get streetAndBuildingName => _streetAndBuildingName;
-  String? get emailAddress => _emailAddress;
-  String? get phoneNumber => _phoneNumber;
-  String? get password => _password;
+  String get presetAddressTag => _presetAddressTag;
+  String get province => _province;
+  String get cityOrMunicipality => _cityOrMunicipality;
+  String get barangay => _barangay;
+  String get streetAndBuildingName => _streetAndBuildingName;
+  String get emailAddress => _emailAddress;
+  String get phoneNumber => _phoneNumber;
+  String get password => _password;
 
   @override
   List<Object?> get props => [
