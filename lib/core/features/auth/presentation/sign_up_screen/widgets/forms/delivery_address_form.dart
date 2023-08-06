@@ -4,7 +4,7 @@ import '../../../../../../../constants/entities/up_residence_hall_entities.dart'
 import '../../../../domain/entities/up_residence_hall_entity.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
-import '../form_validators/preset_address_validator.dart';
+import '../../helpers/form_validators/preset_address_validator.dart';
 
 class DeliveryAddressForm extends StatefulWidget {
   const DeliveryAddressForm({

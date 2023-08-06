@@ -11,21 +11,29 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // Repositories.
   // LocalStorageRepo
-  sl.registerLazySingleton<LocalStorageRepoIntf>(
-    () => LocalStorageRepo(localStorageDataSource: sl()),
+  GetIt.I.registerLazySingleton<LocalStorageRepoIntf>(
+    () => LocalStorageRepo(
+      localStorageDataSource: sl<LocalStorageDataSourceIntf>(),
+    ),
   );
 
   // Data Sources.
   // LocalStorageDataSource
-  sl.registerLazySingleton<LocalStorageDataSourceIntf>(
-    () => LocalStorageDataSource(sharedPreferences: sl()),
+  GetIt.I.registerSingletonWithDependencies<LocalStorageDataSourceIntf>(
+    () {
+      print('LocalStorageDataSource created.');
+
+      return LocalStorageDataSource(sharedPreferences: sl<SharedPreferences>());
+    },
+    dependsOn: [SharedPreferences],
   );
 
-  // Third-part libraries/packages.
+  // Third-party libraries/packages.
   // SharedPreferences.
-  sl.registerLazySingletonAsync(() async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
+  GetIt.I.registerLazySingletonAsync(() async {
+    late final SharedPreferences sharedPreferences;
+
+    sharedPreferences = await SharedPreferences.getInstance();
 
     return sharedPreferences;
   });
