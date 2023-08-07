@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../constants/entities/up_residence_hall_entities.dart';
 import '../../../../domain/entities/up_residence_hall_entity.dart';
+import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
 import '../../helpers/form_validators/preset_address_validator.dart';
 
-class DeliveryAddressForm extends StatefulWidget {
-  const DeliveryAddressForm({
+class AddressInformation extends StatefulWidget {
+  const AddressInformation({
     super.key,
-    required GlobalKey<FormState> deliveryAddressFormKey,
-  }) : _deliveryAddressFormKey = deliveryAddressFormKey;
+    required GlobalKey<FormState> addressInformationFormKey,
+  }) : _addressInformationFormKey = addressInformationFormKey;
 
-  final GlobalKey<FormState> _deliveryAddressFormKey;
+  final GlobalKey<FormState> _addressInformationFormKey;
 
   @override
-  State<DeliveryAddressForm> createState() => _DeliveryAddressFormState();
+  State<AddressInformation> createState() => _AddressInformationState();
 }
 
-class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
-  // Step 2: Delivery Address.
-  // Delivery Address controllers.
+class _AddressInformationState extends State<AddressInformation> {
+  // Step 2: Address Information.
+  // Address Information controllers.
   late final TextEditingController _provinceTextController;
   late final TextEditingController _cityOrMunicipalityTextController;
   late final TextEditingController _barangayTextController;
@@ -34,8 +36,8 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
   void initState() {
     super.initState();
 
-    // Step 2: Delivery Address.
-    // Delivery Address controllers.
+    // Step 2: Address Information.
+    // Address Information controllers.
     _provinceTextController = TextEditingController();
     _cityOrMunicipalityTextController = TextEditingController();
     _barangayTextController = TextEditingController();
@@ -52,7 +54,7 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
 
   @override
   void dispose() {
-    // Step 2. Delivery Address controllers.
+    // Step 2. Address Information controllers.
     _provinceTextController.dispose();
     _cityOrMunicipalityTextController.dispose();
     _barangayTextController.dispose();
@@ -64,7 +66,7 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: widget._deliveryAddressFormKey,
+      key: widget._addressInformationFormKey,
       child: Column(
         children: <Widget>[
           DropdownButtonFormField<UpResidenceHallEntity>(
@@ -92,6 +94,14 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
             validator: (UpResidenceHallEntity? value) {
               return const PresetAddressValidator()(
                 upResidenceHallEntity: value,
+              );
+            },
+            onSaved: (UpResidenceHallEntity? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Preset Address',
+                  value: newValue?.tagName as String,
+                ),
               );
             },
             items: const <DropdownMenuItem<UpResidenceHallEntity>>[
@@ -146,6 +156,14 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
 
               return null;
             },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Province',
+                  value: newValue as String,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16.0),
 
@@ -169,6 +187,14 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
               }
 
               return null;
+            },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'City or Municipality',
+                  value: newValue as String,
+                ),
+              );
             },
           ),
           const SizedBox(height: 16.0),
@@ -194,6 +220,14 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
 
               return null;
             },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Barangay',
+                  value: newValue as String,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16.0),
 
@@ -217,6 +251,14 @@ class _DeliveryAddressFormState extends State<DeliveryAddressForm> {
               }
 
               return null;
+            },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Street and Building Name',
+                  value: newValue as String,
+                ),
+              );
             },
           ),
         ],

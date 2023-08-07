@@ -7,19 +7,19 @@ import 'address_entity.dart';
 class UpResidenceHallEntity implements EntityIntf {
   const UpResidenceHallEntity({
     required String completeName,
-    required String shortName,
+    required String tagName,
     required AddressEntity addressEntity,
   })  : _completeName = completeName,
-        _shortName = shortName,
+        _tagName = tagName,
         _addressEntity = addressEntity;
 
   final String _completeName;
-  final String _shortName;
+  final String _tagName;
   final AddressEntity _addressEntity;
 
   // Getters.
   String get completeName => _completeName;
-  String get shortName => _shortName;
+  String get tagName => _tagName;
   AddressEntity get addressEntity => _addressEntity;
   String get province => _addressEntity.province;
   String get cityOrMunicipality => _addressEntity.cityOrMunicipality;
@@ -29,7 +29,7 @@ class UpResidenceHallEntity implements EntityIntf {
   @override
   List<Object?> get props => [
         _completeName,
-        _shortName,
+        _tagName,
         _addressEntity,
       ];
 

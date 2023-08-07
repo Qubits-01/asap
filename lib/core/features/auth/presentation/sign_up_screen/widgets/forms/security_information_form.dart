@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 
 class SecurityInformationForm extends StatefulWidget {
   const SecurityInformationForm({
@@ -59,6 +62,14 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
 
               return null;
             },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Email Address',
+                  value: newValue as String,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16.0),
 
@@ -81,6 +92,14 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               }
 
               return null;
+            },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Phone Number',
+                  value: newValue as String,
+                ),
+              );
             },
           ),
           const SizedBox(height: 8.0),
@@ -110,6 +129,14 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               }
 
               return null;
+            },
+            onSaved: (String? newValue) {
+              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                SignUpDataPreservationFormSaved(
+                  key: 'Password',
+                  value: newValue as String,
+                ),
+              );
             },
           ),
           const SizedBox(height: 16.0),

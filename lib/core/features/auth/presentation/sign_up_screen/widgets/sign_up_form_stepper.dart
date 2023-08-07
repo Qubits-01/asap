@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
+import '../../../../../../utils/local_storage/domain/repository_interfaces/local_storage_repo_intf.dart';
+import '../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 import '../helpers/sign_up_screen_step_state.dart';
-import 'forms/delivery_address_form.dart';
+import 'forms/address_information.dart';
 import 'forms/security_information_form.dart';
 import 'forms/user_information_form.dart';
 import 'stepper_callbacks/on_step_cancel.dart';
@@ -24,7 +28,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
 
   // Form keys.
   late final GlobalKey<FormState> _userInformationFormKey;
-  late final GlobalKey<FormState> _deliveryAddressFormKey;
+  late final GlobalKey<FormState> _addressInformationFormKey;
   late final GlobalKey<FormState> _securityInformationFormKey;
 
   // OnStep callbacks for the [Stepper] widget.
@@ -45,7 +49,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
 
     // Form keys.
     _userInformationFormKey = GlobalKey<FormState>();
-    _deliveryAddressFormKey = GlobalKey<FormState>();
+    _addressInformationFormKey = GlobalKey<FormState>();
     _securityInformationFormKey = GlobalKey<FormState>();
 
     // OnStep callbacks for the [Stepper] widget.
@@ -56,97 +60,102 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
 
   @override
   Widget build(BuildContext context) {
-    return Stepper(
-      currentStep: _stepperIndex[0],
-      physics: const NeverScrollableScrollPhysics(),
-      onStepContinue: () {
-        _onStepContinue(
-          buildContext: context,
-          stepperIndex: _stepperIndex,
-          formKeys: <GlobalKey<FormState>>[
-            _userInformationFormKey,
-            _deliveryAddressFormKey,
-            _securityInformationFormKey,
-          ],
-          stepStates: _stepStates,
-          setState: () => setState(() {}),
-        );
-      },
-      onStepCancel: () {
-        _onStepCancel(
-          buildContext: context,
-          stepperIndex: _stepperIndex,
-          formKeys: <GlobalKey<FormState>>[
-            _userInformationFormKey,
-            _deliveryAddressFormKey,
-            _securityInformationFormKey,
-          ],
-          stepStates: _stepStates,
-          setState: () => setState(() {}),
-        );
-      },
-      onStepTapped: (int index) {
-        _onStepTapped(
-          stepperIndex: _stepperIndex,
-          newIndex: index,
-          formKeys: <GlobalKey<FormState>>[
-            _userInformationFormKey,
-            _deliveryAddressFormKey,
-            _securityInformationFormKey,
-          ],
-          stepStates: _stepStates,
-          setState: () => setState(() {}),
-        );
-      },
-      steps: <Step>[
-        // User information.
-        Step(
-          title: const Text('User Information'),
-          subtitle: const Text('This is to identify you correctly.'),
-          state: _stepStates[0].stepState,
-          isActive: _stepStates[0].isActive,
-          content: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: UserInformationForm(
-                userInformationFormKey: _userInformationFormKey,
+    return BlocProvider(
+      create: (BuildContext context) => SignUpDataPreservationBloc(
+        localStorageRepo: GetIt.I<LocalStorageRepoIntf>(),
+      ),
+      child: Stepper(
+        currentStep: _stepperIndex[0],
+        physics: const NeverScrollableScrollPhysics(),
+        onStepContinue: () {
+          _onStepContinue(
+            buildContext: context,
+            stepperIndex: _stepperIndex,
+            formKeys: <GlobalKey<FormState>>[
+              _userInformationFormKey,
+              _addressInformationFormKey,
+              _securityInformationFormKey,
+            ],
+            stepStates: _stepStates,
+            setState: () => setState(() {}),
+          );
+        },
+        onStepCancel: () {
+          _onStepCancel(
+            buildContext: context,
+            stepperIndex: _stepperIndex,
+            formKeys: <GlobalKey<FormState>>[
+              _userInformationFormKey,
+              _addressInformationFormKey,
+              _securityInformationFormKey,
+            ],
+            stepStates: _stepStates,
+            setState: () => setState(() {}),
+          );
+        },
+        onStepTapped: (int index) {
+          _onStepTapped(
+            stepperIndex: _stepperIndex,
+            newIndex: index,
+            formKeys: <GlobalKey<FormState>>[
+              _userInformationFormKey,
+              _addressInformationFormKey,
+              _securityInformationFormKey,
+            ],
+            stepStates: _stepStates,
+            setState: () => setState(() {}),
+          );
+        },
+        steps: <Step>[
+          // User information.
+          Step(
+            title: const Text('User Information'),
+            subtitle: const Text('This is to identify you correctly.'),
+            state: _stepStates[0].stepState,
+            isActive: _stepStates[0].isActive,
+            content: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: UserInformationForm(
+                  userInformationFormKey: _userInformationFormKey,
+                ),
               ),
             ),
           ),
-        ),
 
-        // Delivery address.
-        Step(
-          title: const Text('Delivery Address'),
-          subtitle: const Text('Default address. Can be modified later.'),
-          state: _stepStates[1].stepState,
-          isActive: _stepStates[1].isActive,
-          content: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: DeliveryAddressForm(
-                deliveryAddressFormKey: _deliveryAddressFormKey,
+          // Delivery address.
+          Step(
+            title: const Text('Address Information'),
+            subtitle: const Text('Default address. Can be modified later.'),
+            state: _stepStates[1].stepState,
+            isActive: _stepStates[1].isActive,
+            content: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: AddressInformation(
+                  addressInformationFormKey: _addressInformationFormKey,
+                ),
               ),
             ),
           ),
-        ),
 
-        // Security information.
-        Step(
-          title: const Text('Security Information'),
-          subtitle: const Text('A way to secure your account.'),
-          state: _stepStates[2].stepState,
-          isActive: _stepStates[2].isActive,
-          content: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SecurityInformationForm(
-                securityInformationFormKey: _securityInformationFormKey,
+          // Security information.
+          Step(
+            title: const Text('Security Information'),
+            subtitle: const Text('A way to secure your account.'),
+            state: _stepStates[2].stepState,
+            isActive: _stepStates[2].isActive,
+            content: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SecurityInformationForm(
+                  securityInformationFormKey: _securityInformationFormKey,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

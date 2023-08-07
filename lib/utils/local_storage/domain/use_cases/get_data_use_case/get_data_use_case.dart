@@ -9,8 +9,8 @@ import 'params.dart';
 typedef FutureGenericMapValueEntity
     = Future<Either<LocalStorageFailure, GenericMapValueEntity>>;
 
-class GetData extends UseCaseIntf<FutureGenericMapValueEntity, Params> {
-  const GetData({
+class GetDataUseCase extends UseCaseIntf<FutureGenericMapValueEntity, Params> {
+  const GetDataUseCase({
     required LocalStorageRepoIntf localStorageRepo,
   }) : _localStorageRepo = localStorageRepo;
 

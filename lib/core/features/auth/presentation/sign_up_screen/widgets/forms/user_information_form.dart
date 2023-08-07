@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../constants/enums/username_status_enum.dart';
-import '../../helpers/form_data/user_information_form_data.dart';
+import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 
 class UserInformationForm extends StatefulWidget {
   const UserInformationForm({
@@ -17,7 +18,6 @@ class UserInformationForm extends StatefulWidget {
 
 class _UserInformationFormState extends State<UserInformationForm> {
   // Step 1: User Information.
-  late UserInformationFormData _userInformationFormData;
   late UsernameStatusEnum _usernameStatusEnum;
   late Icon _usernameStatusIcon;
   late bool _wasDidChangeDependenciesAlreadyCalledOnce;
@@ -27,7 +27,6 @@ class _UserInformationFormState extends State<UserInformationForm> {
     super.initState();
 
     // Step 1: User Information.
-    _userInformationFormData = UserInformationFormData();
     _usernameStatusEnum = UsernameStatusEnum.unknown;
     _wasDidChangeDependenciesAlreadyCalledOnce = false;
   }
@@ -78,7 +77,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    _userInformationFormData.username = newValue;
+                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                      SignUpDataPreservationFormSaved(
+                        key: 'Username',
+                        value: newValue as String,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -121,7 +125,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    _userInformationFormData.firstName = newValue;
+                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                      SignUpDataPreservationFormSaved(
+                        key: 'First Name',
+                        value: newValue as String,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -147,7 +156,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    _userInformationFormData.middleInitial = newValue;
+                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                      SignUpDataPreservationFormSaved(
+                        key: 'Middle Initial',
+                        value: newValue as String,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -179,7 +193,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    _userInformationFormData.lastName = newValue;
+                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                      SignUpDataPreservationFormSaved(
+                        key: 'Last Name',
+                        value: newValue as String,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -197,7 +216,15 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     labelText: 'Suffix',
                   ),
                   onSaved: (String? newValue) {
-                    _userInformationFormData.suffix = newValue;
+                    // The caching policy would be if a value is null, then an empty string
+                    // would be put as the value. This is to not make the null-exception handler
+                    // in the infrastructure layer more complicated than what it needs to be.
+                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
+                      SignUpDataPreservationFormSaved(
+                        key: 'Suffix',
+                        value: newValue ?? '',
+                      ),
+                    );
                   },
                 ),
               ),

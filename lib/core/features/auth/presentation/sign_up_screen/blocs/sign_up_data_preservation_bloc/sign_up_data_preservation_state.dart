@@ -7,12 +7,18 @@ sealed class SignUpDataPreservationState extends Equatable {
   List<Object> get props => [];
 }
 
-final class SignUpDataPreservationInitial extends SignUpDataPreservationState {}
+final class SignUpDataPreservationInitial extends SignUpDataPreservationState {
+  const SignUpDataPreservationInitial();
+}
 
 final class SignUpDataPreservationInProgress
-    extends SignUpDataPreservationState {}
+    extends SignUpDataPreservationState {
+  const SignUpDataPreservationInProgress();
+}
 
-final class SignUpDataPreservationSuccess extends SignUpDataPreservationState {}
+final class SignUpDataPreservationSuccess extends SignUpDataPreservationState {
+  const SignUpDataPreservationSuccess();
+}
 
 final class SignUpDataPreservationFailure extends SignUpDataPreservationState {
   const SignUpDataPreservationFailure({

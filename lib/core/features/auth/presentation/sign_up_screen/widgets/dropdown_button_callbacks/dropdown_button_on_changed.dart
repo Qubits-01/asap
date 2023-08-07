@@ -33,7 +33,7 @@ class DropdownButtonOnChanged {
       deliveryAddressTextFieldStates[key] = value.copyWith(isEnabled: true);
     });
 
-    if (upResidenceHallEntity.shortName == '[ Other UP RH ]') {
+    if (upResidenceHallEntity.tagName == '[ Other UP RH ]') {
       // Update the corresponding address fields. For now,
       // only set the Street and Building Name field to an empty string.
       provinceTextController.text = upResidenceHallEntity.province;

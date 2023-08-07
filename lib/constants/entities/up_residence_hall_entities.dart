@@ -8,7 +8,7 @@ class UpResidenceHallEntities {
 
   static const ipilRH = UpResidenceHallEntity(
     completeName: 'Ipil Residence Hall',
-    shortName: 'Ipil RH',
+    tagName: 'Ipil RH',
     addressEntity: AddressEntity(
       province: 'Metro Manila',
       cityOrMunicipality: 'Quezon City',
@@ -19,7 +19,7 @@ class UpResidenceHallEntities {
 
   static const yakalRH = UpResidenceHallEntity(
     completeName: 'Yakal Residence Hall',
-    shortName: 'Yakal RH',
+    tagName: 'Yakal RH',
     addressEntity: AddressEntity(
       province: 'Metro Manila',
       cityOrMunicipality: 'Quezon City',
@@ -30,7 +30,7 @@ class UpResidenceHallEntities {
 
   static const kalayaanRH = UpResidenceHallEntity(
     completeName: 'Kalayaan Residence Hall',
-    shortName: 'Kalayaan RH',
+    tagName: 'Kalayaan RH',
     addressEntity: AddressEntity(
       province: 'Metro Manila',
       cityOrMunicipality: 'Quezon City',
@@ -41,7 +41,7 @@ class UpResidenceHallEntities {
 
   static const acaciaRH = UpResidenceHallEntity(
     completeName: 'Acacia Residence Hall',
-    shortName: 'Acacia RH',
+    tagName: 'Acacia RH',
     addressEntity: AddressEntity(
       province: 'Metro Manila',
       cityOrMunicipality: 'Quezon City',
@@ -52,7 +52,7 @@ class UpResidenceHallEntities {
 
   static const otherUpRH = UpResidenceHallEntity(
     completeName: '[ Other UP Residence Hall ]',
-    shortName: '[ Other UP RH ]',
+    tagName: '[ Other UP RH ]',
     addressEntity: AddressEntity(
       province: 'Metro Manila',
       cityOrMunicipality: 'Quezon City',
