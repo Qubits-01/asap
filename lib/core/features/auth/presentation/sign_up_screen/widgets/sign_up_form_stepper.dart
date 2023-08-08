@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
+import '../../../../../../service_locator/service_locator.dart';
 import '../../../../../../utils/local_storage/domain/repository_interfaces/local_storage_repo_intf.dart';
 import '../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 import '../helpers/sign_up_screen_step_state.dart';
@@ -62,7 +62,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => SignUpDataPreservationBloc(
-        localStorageRepo: GetIt.I<LocalStorageRepoIntf>(),
+        localStorageRepo: sl<LocalStorageRepoIntf>(),
       ),
       child: Stepper(
         currentStep: _stepperIndex[0],

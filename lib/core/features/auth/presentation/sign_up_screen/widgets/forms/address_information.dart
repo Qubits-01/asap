@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../constants/entities/up_residence_hall_entities.dart';
+import '../../../../../../../constants/local_storage_cache_keys.dart';
 import '../../../../domain/entities/up_residence_hall_entity.dart';
 import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
-import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
 import '../../helpers/form_validators/preset_address_validator.dart';
+import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
 
 class AddressInformation extends StatefulWidget {
   const AddressInformation({
@@ -99,7 +100,7 @@ class _AddressInformationState extends State<AddressInformation> {
             onSaved: (UpResidenceHallEntity? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Preset Address',
+                  key: LocalStorageCacheKeys.presetAddressTag,
                   value: newValue?.tagName as String,
                 ),
               );
@@ -159,7 +160,7 @@ class _AddressInformationState extends State<AddressInformation> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Province',
+                  key: LocalStorageCacheKeys.province,
                   value: newValue as String,
                 ),
               );
@@ -191,7 +192,7 @@ class _AddressInformationState extends State<AddressInformation> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'City or Municipality',
+                  key: LocalStorageCacheKeys.cityOrMunicipality,
                   value: newValue as String,
                 ),
               );
@@ -223,7 +224,7 @@ class _AddressInformationState extends State<AddressInformation> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Barangay',
+                  key: LocalStorageCacheKeys.barangay,
                   value: newValue as String,
                 ),
               );
@@ -255,7 +256,7 @@ class _AddressInformationState extends State<AddressInformation> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Street and Building Name',
+                  key: LocalStorageCacheKeys.streetAndBuildingName,
                   value: newValue as String,
                 ),
               );

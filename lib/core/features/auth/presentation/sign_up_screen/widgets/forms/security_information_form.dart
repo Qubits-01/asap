@@ -1,3 +1,5 @@
+import 'package:ate_kens_food_delivery/constants/local_storage_cache_keys.dart';
+import 'package:ate_kens_food_delivery/core/features/widgets/password_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -65,7 +67,7 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Email Address',
+                  key: LocalStorageCacheKeys.emailAddress,
                   value: newValue as String,
                 ),
               );
@@ -96,7 +98,7 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Phone Number',
+                  key: LocalStorageCacheKeys.phoneNumber,
                   value: newValue as String,
                 ),
               );
@@ -109,16 +111,9 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
           const SizedBox(height: 8.0),
 
           // Password.
-          TextFormField(
-            controller: _passwordTextController,
-            obscureText: true,
-            keyboardType: TextInputType.visiblePassword,
+          PasswordTextInput(
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Password',
-            ),
+            labelText: 'Password',
             validator: (String? value) {
               // TODO: Implement a proper regex for password validation.
 
@@ -133,7 +128,7 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
             onSaved: (String? newValue) {
               BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                 SignUpDataPreservationFormSaved(
-                  key: 'Password',
+                  key: LocalStorageCacheKeys.password,
                   value: newValue as String,
                 ),
               );
@@ -142,15 +137,9 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
           const SizedBox(height: 16.0),
 
           // Confirm password.
-          TextFormField(
-            obscureText: true,
-            keyboardType: TextInputType.visiblePassword,
+          PasswordTextInput(
             textInputAction: TextInputAction.done,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              labelText: 'Confirm Password',
-            ),
+            labelText: 'Confirm Password',
             validator: (String? value) {
               if (value == null || value.isEmpty) {
                 return 'Please reenter your Password.';

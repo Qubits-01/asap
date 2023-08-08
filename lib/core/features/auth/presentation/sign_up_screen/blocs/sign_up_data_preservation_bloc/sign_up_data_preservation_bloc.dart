@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
+import '../../../../../../../service_locator/service_locator.dart';
 import '../../../../../../../utils/local_storage/domain/repository_interfaces/local_storage_repo_intf.dart';
 import '../../../../../../../utils/local_storage/domain/use_cases/save_data_use_case/params.dart';
 import '../../../../../../../utils/local_storage/domain/use_cases/save_data_use_case/save_data_use_case.dart';
@@ -29,7 +29,7 @@ class SignUpDataPreservationBloc
       late final SaveDataUseCase saveDataUseCase;
       late final Either<LocalStorageFailure, void> eitherSaveData;
 
-      saveDataUseCase = GetIt.I<SaveDataUseCase>();
+      saveDataUseCase = sl<SaveDataUseCase>();
 
       emit(const SignUpDataPreservationInProgress());
 

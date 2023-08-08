@@ -8,38 +8,37 @@ import '../utils/local_storage/infrastructure/data_source/interfaces/local_stora
 import '../utils/local_storage/infrastructure/data_source/local_storage_data_source.dart';
 import '../utils/local_storage/infrastructure/repositories/local_storage_repo.dart';
 
-Future<void> init() async {
-  // // [ Blocs ]
-  // GetIt.I.registerLazySingleton(
-  //   () => SignUpDataPreservationBloc(
-  //     localStorageRepo: GetIt.I<LocalStorageRepo>(),
-  //   ),
-  // );
+final GetIt sl = GetIt.instance;
+
+Future<void> initialize() async {
+  // Blocs will not be initialized here. Instead, they will be initialized in their
+  // respective BlocProvider widgets (and the like). This is to let the flutter_bloc
+  // package to manage the automatic disposal of the said bloc instances (most of it).
 
   // [ Use Cases ]
-  GetIt.I.registerLazySingleton(
-    () => SaveDataUseCase(localStorageRepo: GetIt.I<LocalStorageRepoIntf>()),
+  sl.registerLazySingleton(
+    () => SaveDataUseCase(localStorageRepo: sl<LocalStorageRepoIntf>()),
   );
 
-  GetIt.I.registerLazySingleton(
-    () => GetDataUseCase(localStorageRepo: GetIt.I<LocalStorageRepoIntf>()),
+  sl.registerLazySingleton(
+    () => GetDataUseCase(localStorageRepo: sl<LocalStorageRepoIntf>()),
   );
 
   // [ Repositories ]
-  GetIt.I.registerLazySingleton<LocalStorageRepoIntf>(
+  sl.registerLazySingleton<LocalStorageRepoIntf>(
     () => LocalStorageRepo(
-      localStorageDataSource: GetIt.I<LocalStorageDataSourceIntf>(),
+      localStorageDataSource: sl<LocalStorageDataSourceIntf>(),
     ),
   );
 
   // [ Data Sources ]
   // LocalStorageDataSource
-  GetIt.I.registerLazySingleton<LocalStorageDataSourceIntf>(
+  sl.registerLazySingleton<LocalStorageDataSourceIntf>(
     () {
       print('LocalStorageDataSource created.');
 
       return LocalStorageDataSource(
-        sharedPreferences: GetIt.I<SharedPreferences>(),
+        sharedPreferences: sl<SharedPreferences>(),
       );
     },
   );
@@ -48,7 +47,7 @@ Future<void> init() async {
   // SharedPreferences.
   final SharedPreferences sharedPreferences;
   sharedPreferences = await SharedPreferences.getInstance();
-  GetIt.I.registerLazySingleton(() => sharedPreferences);
+  sl.registerLazySingleton(() => sharedPreferences);
 
   print('Service locator initialized.');
 }

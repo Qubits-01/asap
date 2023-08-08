@@ -14,7 +14,7 @@ Future<void> main() async {
   const BlocObserver appBlocObserver = AppBlocObserver();
 
   // Initialize the services/dependencies.
-  await service_locator.init();
+  await service_locator.initialize();
 
   runApp(const AteKensFoodDeliveryApp());
 }

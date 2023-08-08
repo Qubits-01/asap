@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../constants/enums/username_status_enum.dart';
+import '../../../../../../../constants/local_storage_cache_keys.dart';
 import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 
 class UserInformationForm extends StatefulWidget {
@@ -79,7 +80,7 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // The [newValue] is guaranteed to be non-null because of the validator.
                     BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                       SignUpDataPreservationFormSaved(
-                        key: 'Username',
+                        key: LocalStorageCacheKeys.username,
                         value: newValue as String,
                       ),
                     );
@@ -127,7 +128,7 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // The [newValue] is guaranteed to be non-null because of the validator.
                     BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                       SignUpDataPreservationFormSaved(
-                        key: 'First Name',
+                        key: LocalStorageCacheKeys.firstName,
                         value: newValue as String,
                       ),
                     );
@@ -158,7 +159,7 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // The [newValue] is guaranteed to be non-null because of the validator.
                     BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                       SignUpDataPreservationFormSaved(
-                        key: 'Middle Initial',
+                        key: LocalStorageCacheKeys.middleInitial,
                         value: newValue as String,
                       ),
                     );
@@ -195,7 +196,7 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // The [newValue] is guaranteed to be non-null because of the validator.
                     BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                       SignUpDataPreservationFormSaved(
-                        key: 'Last Name',
+                        key: LocalStorageCacheKeys.lastName,
                         value: newValue as String,
                       ),
                     );
@@ -221,7 +222,7 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // in the infrastructure layer more complicated than what it needs to be.
                     BlocProvider.of<SignUpDataPreservationBloc>(context).add(
                       SignUpDataPreservationFormSaved(
-                        key: 'Suffix',
+                        key: LocalStorageCacheKeys.suffix,
                         value: newValue ?? '',
                       ),
                     );
