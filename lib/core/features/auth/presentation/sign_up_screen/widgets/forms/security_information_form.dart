@@ -1,8 +1,8 @@
-import 'package:ate_kens_food_delivery/constants/local_storage_cache_keys.dart';
-import 'package:ate_kens_food_delivery/core/features/widgets/password_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../../constants/local_storage_cache_keys.dart';
+import '../../../../../widgets/password_text_input.dart';
 import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 
 class SecurityInformationForm extends StatefulWidget {
@@ -65,12 +65,12 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.emailAddress,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.emailAddress,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
           const SizedBox(height: 16.0),
@@ -96,12 +96,12 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.phoneNumber,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.phoneNumber,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
           const SizedBox(height: 8.0),
@@ -126,12 +126,12 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.password,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.password,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
           const SizedBox(height: 16.0),

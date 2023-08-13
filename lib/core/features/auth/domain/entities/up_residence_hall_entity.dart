@@ -26,6 +26,7 @@ class UpResidenceHallEntity implements EntityIntf {
   String get barangay => _addressEntity.barangay;
   String get streetAndBuildingName => _addressEntity.streetAndBuildingName;
 
+  /// Prerequisite setup for the [Equatable] package.
   @override
   List<Object?> get props => [
         _completeName,

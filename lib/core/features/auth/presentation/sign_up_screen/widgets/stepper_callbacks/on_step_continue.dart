@@ -24,6 +24,9 @@ class OnStepContinue {
     late int thisStepperIndex;
     late final bool areAllFormsValid;
 
+    // TODO: Add [ Step x.x.x... ] comments on the algorithm throughout the app's code.
+    // This is to enhance readability and maintainability.
+
     // For code readability purposes.
     thisStepperIndex = stepperIndex[0];
 

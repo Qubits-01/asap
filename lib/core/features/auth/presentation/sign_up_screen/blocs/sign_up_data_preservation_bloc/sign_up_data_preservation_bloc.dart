@@ -38,6 +38,8 @@ class SignUpDataPreservationBloc
       );
 
       eitherSaveData.fold((LocalStorageFailure left) {
+        print('Failure');
+
         emit(SignUpDataPreservationFailure(
           errorTitle: left.title,
           errorMessage: left.message,

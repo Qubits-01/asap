@@ -78,12 +78,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                      SignUpDataPreservationFormSaved(
-                        key: LocalStorageCacheKeys.username,
-                        value: newValue as String,
-                      ),
-                    );
+                    context.read<SignUpDataPreservationBloc>().add(
+                          SignUpDataPreservationFormSaved(
+                            key: LocalStorageCacheKeys.username,
+                            value: newValue as String,
+                          ),
+                        );
                   },
                 ),
               ),
@@ -126,12 +126,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                      SignUpDataPreservationFormSaved(
-                        key: LocalStorageCacheKeys.firstName,
-                        value: newValue as String,
-                      ),
-                    );
+                    context.read<SignUpDataPreservationBloc>().add(
+                          SignUpDataPreservationFormSaved(
+                            key: LocalStorageCacheKeys.firstName,
+                            value: newValue as String,
+                          ),
+                        );
                   },
                 ),
               ),
@@ -157,12 +157,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                      SignUpDataPreservationFormSaved(
-                        key: LocalStorageCacheKeys.middleInitial,
-                        value: newValue as String,
-                      ),
-                    );
+                    context.read<SignUpDataPreservationBloc>().add(
+                          SignUpDataPreservationFormSaved(
+                            key: LocalStorageCacheKeys.middleInitial,
+                            value: newValue as String,
+                          ),
+                        );
                   },
                 ),
               ),
@@ -194,12 +194,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                      SignUpDataPreservationFormSaved(
-                        key: LocalStorageCacheKeys.lastName,
-                        value: newValue as String,
-                      ),
-                    );
+                    context.read<SignUpDataPreservationBloc>().add(
+                          SignUpDataPreservationFormSaved(
+                            key: LocalStorageCacheKeys.lastName,
+                            value: newValue as String,
+                          ),
+                        );
                   },
                 ),
               ),
@@ -220,12 +220,12 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // The caching policy would be if a value is null, then an empty string
                     // would be put as the value. This is to not make the null-exception handler
                     // in the infrastructure layer more complicated than what it needs to be.
-                    BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                      SignUpDataPreservationFormSaved(
-                        key: LocalStorageCacheKeys.suffix,
-                        value: newValue ?? '',
-                      ),
-                    );
+                    context.read<SignUpDataPreservationBloc>().add(
+                          SignUpDataPreservationFormSaved(
+                            key: LocalStorageCacheKeys.suffix,
+                            value: newValue ?? '',
+                          ),
+                        );
                   },
                 ),
               ),

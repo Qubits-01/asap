@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../../../domain/entities/up_residence_hall_entity.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
+import '../../helpers/sign_up_screen_step_state.dart';
 
 class DropdownButtonOnChanged {
   DropdownButtonOnChanged();
 
   void call({
+    required List<int> stepperIndex,
+    required GlobalKey<FormState> addressInformationFormKey,
+    required List<SignUpScreenStepState> stepStates,
     required Map<String, DeliveryAddressTextFieldState>
         deliveryAddressTextFieldStates,
     required TextEditingController provinceTextController,
@@ -16,11 +20,22 @@ class DropdownButtonOnChanged {
     required UpResidenceHallEntity? upResidenceHallEntity,
     required void Function() setState,
   }) {
+    late bool? isFormValid;
+
+    // The [thisStepperIndex] is a required parameter instead of just using
+    // [thisStepperIndex = 1] (simple way). The simple way was not used because the number
+    // of sections in the [Stepper] widget might change in the future (i.e., the corresponding
+    // stepper index for this section will not be equal to 1 anymore).
+
+    late final int thisStepperIndex;
+
+    // [ Step 1.1. ]
     // Typecast the [upResidenceHallEntity] variable to a non-nullable type since
     // it will never be null due to the implementation of the [DropdownMenuItem]
     // value properties (i.e., they are non-nullable by design).
     upResidenceHallEntity as UpResidenceHallEntity;
 
+    // [ Step 1.2. ]
     // At the first instance that the user selected a [DropdownMenuItem],
     // enable all the corresponding text fields.
     //
@@ -33,6 +48,7 @@ class DropdownButtonOnChanged {
       deliveryAddressTextFieldStates[key] = value.copyWith(isEnabled: true);
     });
 
+    // [ Step 2.1. ]
     if (upResidenceHallEntity.tagName == '[ Other UP RH ]') {
       // Update the corresponding address fields. For now,
       // only set the Street and Building Name field to an empty string.
@@ -42,6 +58,7 @@ class DropdownButtonOnChanged {
       barangayTextController.text = upResidenceHallEntity.barangay;
       streetAndBuildingNameTextController.text = '';
 
+      // [ Step 3.1. ]
       // Set the corresponding address fields to not read-only mode.
       // So that the user can input their own address.
       deliveryAddressTextFieldStates.forEach((
@@ -50,6 +67,8 @@ class DropdownButtonOnChanged {
       ) {
         deliveryAddressTextFieldStates[key] = value.copyWith(isReadOnly: false);
       });
+
+      // [ Step 2.2. ]
     } else {
       // Update the corresponding address fields.
       provinceTextController.text = upResidenceHallEntity.province;
@@ -59,6 +78,7 @@ class DropdownButtonOnChanged {
       streetAndBuildingNameTextController.text =
           upResidenceHallEntity.streetAndBuildingName;
 
+      // [ Step 3.2. ]
       // Set the corresponding address fields to read-only mode.
       deliveryAddressTextFieldStates.forEach((
         String key,
@@ -68,6 +88,26 @@ class DropdownButtonOnChanged {
       });
     }
 
+    // [ Step 4. ]
+    // Validate the form to remove the error message/s and error-themed visual alerts.
+    thisStepperIndex = stepperIndex[0];
+    isFormValid = addressInformationFormKey.currentState?.validate();
+
+    // TODO: This is not working. Fix this. The visual errors on the corresponding step
+    // must update dynamically. One potential reason why this is not working might be because
+    // of the limitation of passing a list by reference through function parameters (maybe it
+    // only works on 1-call level). In the future, refactor the whole Stepper logic using Bloc.
+    // This is to cleanly separate the UI and the logic layers.
+    if (isFormValid != null) {
+      stepStates[thisStepperIndex] = stepStates[thisStepperIndex].copyWith(
+        stepState: isFormValid ? StepState.complete : StepState.error,
+      );
+
+      print(isFormValid);
+      print(stepStates[thisStepperIndex].stepState);
+    }
+
+    // [ Step 5.]
     // Rebuild.
     setState();
   }

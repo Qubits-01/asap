@@ -9,9 +9,6 @@ class SignUpSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up Summary')),
-      body: const Center(
-        child: Text('Sign Up Summary Screen'),
-      ),
     );
   }
 }

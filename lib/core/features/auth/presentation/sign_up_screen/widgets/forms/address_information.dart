@@ -7,15 +7,22 @@ import '../../../../domain/entities/up_residence_hall_entity.dart';
 import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 import '../../helpers/form_validators/preset_address_validator.dart';
+import '../../helpers/sign_up_screen_step_state.dart';
 import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
 
 class AddressInformation extends StatefulWidget {
   const AddressInformation({
     super.key,
     required GlobalKey<FormState> addressInformationFormKey,
-  }) : _addressInformationFormKey = addressInformationFormKey;
+    required List<int> stepperIndex,
+    required List<SignUpScreenStepState> stepStates,
+  })  : _addressInformationFormKey = addressInformationFormKey,
+        _stepperIndex = stepperIndex,
+        _stepStates = stepStates;
 
   final GlobalKey<FormState> _addressInformationFormKey;
+  final List<int> _stepperIndex;
+  final List<SignUpScreenStepState> _stepStates;
 
   @override
   State<AddressInformation> createState() => _AddressInformationState();
@@ -81,6 +88,9 @@ class _AddressInformationState extends State<AddressInformation> {
               UpResidenceHallEntity? upResidenceHallEntity,
             ) {
               _dropdownButtonOnChanged(
+                stepperIndex: widget._stepperIndex,
+                stepStates: widget._stepStates,
+                addressInformationFormKey: widget._addressInformationFormKey,
                 deliveryAddressTextFieldStates: _deliveryAddressTextFieldStates,
                 provinceTextController: _provinceTextController,
                 cityOrMunicipalityTextController:
@@ -98,12 +108,12 @@ class _AddressInformationState extends State<AddressInformation> {
               );
             },
             onSaved: (UpResidenceHallEntity? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.presetAddressTag,
-                  value: newValue?.tagName as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.presetAddressTag,
+                      value: newValue?.tagName as String,
+                    ),
+                  );
             },
             items: const <DropdownMenuItem<UpResidenceHallEntity>>[
               DropdownMenuItem(
@@ -158,12 +168,12 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.province,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.province,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
           const SizedBox(height: 16.0),
@@ -190,12 +200,12 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.cityOrMunicipality,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.cityOrMunicipality,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
           const SizedBox(height: 16.0),
@@ -222,12 +232,12 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.barangay,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.barangay,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
           const SizedBox(height: 16.0),
@@ -254,12 +264,12 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              BlocProvider.of<SignUpDataPreservationBloc>(context).add(
-                SignUpDataPreservationFormSaved(
-                  key: LocalStorageCacheKeys.streetAndBuildingName,
-                  value: newValue as String,
-                ),
-              );
+              context.read<SignUpDataPreservationBloc>().add(
+                    SignUpDataPreservationFormSaved(
+                      key: LocalStorageCacheKeys.streetAndBuildingName,
+                      value: newValue as String,
+                    ),
+                  );
             },
           ),
         ],

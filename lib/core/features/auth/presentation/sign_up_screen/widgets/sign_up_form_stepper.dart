@@ -61,7 +61,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SignUpDataPreservationBloc(
+      create: (_) => SignUpDataPreservationBloc(
         localStorageRepo: sl<LocalStorageRepoIntf>(),
       ),
       child: Stepper(
@@ -134,6 +134,8 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                 padding: const EdgeInsets.all(12.0),
                 child: AddressInformation(
                   addressInformationFormKey: _addressInformationFormKey,
+                  stepperIndex: _stepperIndex,
+                  stepStates: _stepStates,
                 ),
               ),
             ),
