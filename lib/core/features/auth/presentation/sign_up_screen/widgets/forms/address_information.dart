@@ -7,7 +7,7 @@ import '../../../../domain/entities/up_residence_hall_entity.dart';
 import '../../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 import '../../helpers/form_validators/preset_address_validator.dart';
-import '../../helpers/sign_up_screen_step_state.dart';
+
 import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
 
 class AddressInformation extends StatefulWidget {
@@ -15,14 +15,11 @@ class AddressInformation extends StatefulWidget {
     super.key,
     required GlobalKey<FormState> addressInformationFormKey,
     required List<int> stepperIndex,
-    required List<SignUpScreenStepState> stepStates,
   })  : _addressInformationFormKey = addressInformationFormKey,
-        _stepperIndex = stepperIndex,
-        _stepStates = stepStates;
+        _stepperIndex = stepperIndex;
 
   final GlobalKey<FormState> _addressInformationFormKey;
   final List<int> _stepperIndex;
-  final List<SignUpScreenStepState> _stepStates;
 
   @override
   State<AddressInformation> createState() => _AddressInformationState();
@@ -89,7 +86,6 @@ class _AddressInformationState extends State<AddressInformation> {
             ) {
               _dropdownButtonOnChanged(
                 stepperIndex: widget._stepperIndex,
-                stepStates: widget._stepStates,
                 addressInformationFormKey: widget._addressInformationFormKey,
                 deliveryAddressTextFieldStates: _deliveryAddressTextFieldStates,
                 provinceTextController: _provinceTextController,

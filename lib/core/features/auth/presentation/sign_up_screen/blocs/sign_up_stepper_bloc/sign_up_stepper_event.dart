@@ -12,33 +12,11 @@ final class SignUpStepperStarted extends SignUpStepperEvent {
 }
 
 final class SignUpStepperStepContinued extends SignUpStepperEvent {
-  const SignUpStepperStepContinued({
-    required int currentIndex,
-  }) : _currentIndex = currentIndex;
-
-  final int _currentIndex;
-
-  // Getters.
-  int get currentIndex => _currentIndex;
-
-  /// Prerequisite setup for the [Equatable] package.
-  @override
-  List<Object> get props => [currentIndex];
+  const SignUpStepperStepContinued();
 }
 
 final class SignUpStepperStepCanceled extends SignUpStepperEvent {
-  const SignUpStepperStepCanceled({
-    required int currentIndex,
-  }) : _currentIndex = currentIndex;
-
-  final int _currentIndex;
-
-  // Getters.
-  int get currentIndex => _currentIndex;
-
-  /// Prerequisite setup for the [Equatable] package.
-  @override
-  List<Object> get props => [currentIndex];
+  const SignUpStepperStepCanceled();
 }
 
 final class SignUpStepperStepTapped extends SignUpStepperEvent {

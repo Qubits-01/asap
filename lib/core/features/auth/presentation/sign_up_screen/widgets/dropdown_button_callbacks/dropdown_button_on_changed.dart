@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../domain/entities/up_residence_hall_entity.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
-import '../../helpers/sign_up_screen_step_state.dart';
 
 class DropdownButtonOnChanged {
   DropdownButtonOnChanged();
@@ -10,7 +9,6 @@ class DropdownButtonOnChanged {
   void call({
     required List<int> stepperIndex,
     required GlobalKey<FormState> addressInformationFormKey,
-    required List<SignUpScreenStepState> stepStates,
     required Map<String, DeliveryAddressTextFieldState>
         deliveryAddressTextFieldStates,
     required TextEditingController provinceTextController,
@@ -99,12 +97,9 @@ class DropdownButtonOnChanged {
     // only works on 1-call level). In the future, refactor the whole Stepper logic using Bloc.
     // This is to cleanly separate the UI and the logic layers.
     if (isFormValid != null) {
-      stepStates[thisStepperIndex] = stepStates[thisStepperIndex].copyWith(
-        stepState: isFormValid ? StepState.complete : StepState.error,
-      );
-
-      print(isFormValid);
-      print(stepStates[thisStepperIndex].stepState);
+      // stepStates[thisStepperIndex] = stepStates[thisStepperIndex].copyWith(
+      //   stepState: isFormValid ? StepState.complete : StepState.error,
+      // );
     }
 
     // [ Step 5.]

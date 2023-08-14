@@ -7,20 +7,27 @@ void onSignUpStepperStepTappedEventHandler({
   required SignUpStepperState state,
   required List<GlobalKey<FormState>> formKeys,
 }) {
-  /// [ Step 1. ]
+  /// [ Step 1.1 ]
+  /// Get a copy of the [SignUpStepperEntity] from the
+  /// current state of [SignUpStepperBloc].
+  late SignUpStepperEntity signUpStepperEntity;
+  signUpStepperEntity = state.signUpStepperEntity.copyWith();
+
+  /// [ Step 1.2 ]
   /// Emit the [SignUpStepperVisualUpdateInProgress] state.
-  emit(const SignUpStepperVisualUpdateInProgress());
+  emit(SignUpStepperVisualUpdateInProgress(
+    signUpStepperEntity: signUpStepperEntity,
+  ));
 
   late final int newIndex;
 
   /// [ Convenience variables (for readability). ]
-  late SignUpStepperEntity signUpStepperEntity;
   late final bool isCurrentFormValid;
   late final bool isCompleteOrErrorStepState;
   late final int currentIndex;
-  late StepState userInformationStepState;
-  late StepState addressInformationStepState;
-  late StepState securityInformationStepState;
+  late final StepState userInformationStepState;
+  late final StepState addressInformationStepState;
+  late final StepState securityInformationStepState;
 
   /// [ Step 2. ]
   /// Initialize the convenience variables (and other variables) if needed be,
@@ -28,7 +35,6 @@ void onSignUpStepperStepTappedEventHandler({
   /// Do take note that these said convenience variables' values might
   /// change later on.
   newIndex = event.newIndex;
-  signUpStepperEntity = state.signUpStepperEntity as SignUpStepperEntity;
   currentIndex = signUpStepperEntity.currentIndex;
   userInformationStepState = signUpStepperEntity.userInformationStepState;
   addressInformationStepState = signUpStepperEntity.addressInformationStepState;
