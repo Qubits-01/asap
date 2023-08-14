@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../interfaces/entity_intf.dart';
 
-final class StepperEntity implements EntityIntf {
-  const StepperEntity({
+final class SignUpStepperEntity implements EntityIntf {
+  const SignUpStepperEntity({
     required int currentIndex,
     required StepState userInformationStepState,
     required bool isUserInformationStepActive,
