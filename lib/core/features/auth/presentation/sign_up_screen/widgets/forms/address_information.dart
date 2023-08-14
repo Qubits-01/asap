@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../constants/entities/up_residence_hall_entities.dart';
 import '../../../../../../../constants/local_storage_cache_keys.dart';
 import '../../../../domain/entities/up_residence_hall_entity.dart';
-import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
+import '../../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 import '../../helpers/form_validators/preset_address_validator.dart';
 import '../../helpers/sign_up_screen_step_state.dart';
@@ -108,8 +108,8 @@ class _AddressInformationState extends State<AddressInformation> {
               );
             },
             onSaved: (UpResidenceHallEntity? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.presetAddressTag,
                       value: newValue?.tagName as String,
                     ),
@@ -168,8 +168,8 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.province,
                       value: newValue as String,
                     ),
@@ -200,8 +200,8 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.cityOrMunicipality,
                       value: newValue as String,
                     ),
@@ -232,8 +232,8 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.barangay,
                       value: newValue as String,
                     ),
@@ -264,8 +264,8 @@ class _AddressInformationState extends State<AddressInformation> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.streetAndBuildingName,
                       value: newValue as String,
                     ),

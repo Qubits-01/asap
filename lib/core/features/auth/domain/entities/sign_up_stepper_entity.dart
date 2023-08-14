@@ -21,19 +21,19 @@ final class SignUpStepperEntity implements EntityIntf {
 
   final int _currentIndex;
 
-  // User Information step.
+  /// User Information step.
   final StepState _userInformationStepState;
   final bool _isUserInformationStepActive;
 
-  // Address Information step.
+  /// Address Information step.
   final StepState _addressInformationStepState;
   final bool _isAddressInformationStepActive;
 
-  // Security Information step.
+  /// Security Information step.
   final StepState _securityInformationStepState;
   final bool _isSecurityInformationStepActive;
 
-  // Getters.
+  /// Getters.
   int get currentIndex => _currentIndex;
   StepState get userInformationStepState => _userInformationStepState;
   bool get isUserInformationStepActive => _isUserInformationStepActive;
@@ -41,6 +41,33 @@ final class SignUpStepperEntity implements EntityIntf {
   bool get isAddressInformationStepActive => _isAddressInformationStepActive;
   StepState get securityInformationStepState => _securityInformationStepState;
   bool get isSecurityInformationStepActive => _isSecurityInformationStepActive;
+
+  /// Copy with.
+  SignUpStepperEntity copyWith({
+    int? currentIndex,
+    StepState? userInformationStepState,
+    bool? isUserInformationStepActive,
+    StepState? addressInformationStepState,
+    bool? isAddressInformationStepActive,
+    StepState? securityInformationStepState,
+    bool? isSecurityInformationStepActive,
+  }) {
+    return SignUpStepperEntity(
+      currentIndex: currentIndex ?? this.currentIndex,
+      userInformationStepState:
+          userInformationStepState ?? this.userInformationStepState,
+      isUserInformationStepActive:
+          isUserInformationStepActive ?? this.isUserInformationStepActive,
+      addressInformationStepState:
+          addressInformationStepState ?? this.addressInformationStepState,
+      isAddressInformationStepActive:
+          isAddressInformationStepActive ?? this.isAddressInformationStepActive,
+      securityInformationStepState:
+          securityInformationStepState ?? this.securityInformationStepState,
+      isSecurityInformationStepActive: isSecurityInformationStepActive ??
+          this.isSecurityInformationStepActive,
+    );
+  }
 
   /// Prerequisite setup for the [Equatable] package.
   @override

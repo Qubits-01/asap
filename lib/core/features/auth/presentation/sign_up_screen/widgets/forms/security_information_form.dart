@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../constants/local_storage_cache_keys.dart';
 import '../../../../../widgets/password_text_input.dart';
-import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
+import '../../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
 
 class SecurityInformationForm extends StatefulWidget {
   const SecurityInformationForm({
@@ -65,8 +65,8 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.emailAddress,
                       value: newValue as String,
                     ),
@@ -96,8 +96,8 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.phoneNumber,
                       value: newValue as String,
                     ),
@@ -126,8 +126,8 @@ class _SecurityInformationFormState extends State<SecurityInformationForm> {
               return null;
             },
             onSaved: (String? newValue) {
-              context.read<SignUpDataPreservationBloc>().add(
-                    SignUpDataPreservationFormSaved(
+              context.read<SignUpFormDataBloc>().add(
+                    SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.password,
                       value: newValue as String,
                     ),

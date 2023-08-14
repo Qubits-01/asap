@@ -3,21 +3,20 @@ part of 'sign_up_stepper_bloc.dart';
 sealed class SignUpStepperState extends Equatable {
   const SignUpStepperState({
     SignUpStepperEntity? signUpStepperEntity,
-    String? errorTitle,
-    String? errorMessage,
+    FailureEntity? failureEntity,
   })  : _signUpStepperEntity = signUpStepperEntity,
-        _errorTitle = errorTitle,
-        _errorMessage = errorMessage;
+        _failureEntity = failureEntity;
 
   final SignUpStepperEntity? _signUpStepperEntity;
-  final String? _errorTitle, _errorMessage;
+  final FailureEntity? _failureEntity;
 
   /// Getters.
   SignUpStepperEntity? get signUpStepperEntity => _signUpStepperEntity;
+  FailureEntity? get failureEntity => _failureEntity;
 
   /// Pre-requisite setup for the [Equatable] package.
   @override
-  List<Object?> get props => [_signUpStepperEntity, _errorTitle, _errorMessage];
+  List<Object?> get props => [signUpStepperEntity, failureEntity];
 }
 
 final class SignUpStepperInitial extends SignUpStepperState {
@@ -47,7 +46,6 @@ final class SignUpStepperVisualUpdateSuccess extends SignUpStepperState {
 
 final class SignUpStepperVisualUpdateFailure extends SignUpStepperState {
   const SignUpStepperVisualUpdateFailure({
-    required String super.errorTitle,
-    required String super.errorMessage,
+    required FailureEntity super.failureEntity,
   });
 }

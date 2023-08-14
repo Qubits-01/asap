@@ -42,25 +42,14 @@ final class SignUpStepperStepCanceled extends SignUpStepperEvent {
 }
 
 final class SignUpStepperStepTapped extends SignUpStepperEvent {
-  const SignUpStepperStepTapped({
-    required SignUpStepperWidgetState signUpStepperWidgetState,
-    required int newIndex,
-    required List<GlobalKey<FormState>> formKeys,
-  })  : _signUpStepperWidgetState = signUpStepperWidgetState,
-        _newIndex = newIndex,
-        _formKeys = formKeys;
+  const SignUpStepperStepTapped({required int newIndex}) : _newIndex = newIndex;
 
-  final SignUpStepperWidgetState _signUpStepperWidgetState;
   final int _newIndex;
-  final List<GlobalKey<FormState>> _formKeys;
 
   // Getters.
   int get newIndex => _newIndex;
-  SignUpStepperWidgetState get signUpStepperWidgetState =>
-      _signUpStepperWidgetState;
-  List<GlobalKey<FormState>> get formKeys => _formKeys;
 
   /// Prerequisite setup for the [Equatable] package.
   @override
-  List<Object> get props => [signUpStepperWidgetState, newIndex, formKeys];
+  List<Object> get props => [newIndex];
 }

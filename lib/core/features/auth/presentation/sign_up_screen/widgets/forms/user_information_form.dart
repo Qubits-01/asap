@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../constants/enums/username_status_enum.dart';
 import '../../../../../../../constants/local_storage_cache_keys.dart';
-import '../../blocs/sign_up_data_preservation_bloc/sign_up_data_preservation_bloc.dart';
+import '../../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
 
 class UserInformationForm extends StatefulWidget {
   const UserInformationForm({
@@ -78,8 +78,8 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    context.read<SignUpDataPreservationBloc>().add(
-                          SignUpDataPreservationFormSaved(
+                    context.read<SignUpFormDataBloc>().add(
+                          SignUpFormDataInputSaved(
                             key: LocalStorageCacheKeys.username,
                             value: newValue as String,
                           ),
@@ -126,8 +126,8 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    context.read<SignUpDataPreservationBloc>().add(
-                          SignUpDataPreservationFormSaved(
+                    context.read<SignUpFormDataBloc>().add(
+                          SignUpFormDataInputSaved(
                             key: LocalStorageCacheKeys.firstName,
                             value: newValue as String,
                           ),
@@ -157,8 +157,8 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    context.read<SignUpDataPreservationBloc>().add(
-                          SignUpDataPreservationFormSaved(
+                    context.read<SignUpFormDataBloc>().add(
+                          SignUpFormDataInputSaved(
                             key: LocalStorageCacheKeys.middleInitial,
                             value: newValue as String,
                           ),
@@ -194,8 +194,8 @@ class _UserInformationFormState extends State<UserInformationForm> {
                   },
                   onSaved: (String? newValue) {
                     // The [newValue] is guaranteed to be non-null because of the validator.
-                    context.read<SignUpDataPreservationBloc>().add(
-                          SignUpDataPreservationFormSaved(
+                    context.read<SignUpFormDataBloc>().add(
+                          SignUpFormDataInputSaved(
                             key: LocalStorageCacheKeys.lastName,
                             value: newValue as String,
                           ),
@@ -220,8 +220,8 @@ class _UserInformationFormState extends State<UserInformationForm> {
                     // The caching policy would be if a value is null, then an empty string
                     // would be put as the value. This is to not make the null-exception handler
                     // in the infrastructure layer more complicated than what it needs to be.
-                    context.read<SignUpDataPreservationBloc>().add(
-                          SignUpDataPreservationFormSaved(
+                    context.read<SignUpFormDataBloc>().add(
+                          SignUpFormDataInputSaved(
                             key: LocalStorageCacheKeys.suffix,
                             value: newValue ?? '',
                           ),

@@ -11,19 +11,19 @@ import '../../../../../../exception_handling/failures/local_storage_failure.dart
 part 'sign_up_data_preservation_event.dart';
 part 'sign_up_data_preservation_state.dart';
 
-class SignUpDataPreservationBloc
-    extends Bloc<SignUpDataPreservationEvent, SignUpDataPreservationState> {
+class SignUpFormDataBloc
+    extends Bloc<SignUpFormDataEvent, SignUpFormDataState> {
   final LocalStorageRepoIntf _localStorageRepo;
 
-  SignUpDataPreservationBloc({
+  SignUpFormDataBloc({
     required localStorageRepo,
   })  : _localStorageRepo = localStorageRepo,
-        super(const SignUpDataPreservationInitial()) {
-    on<SignUpDataPreservationStarted>((event, emit) {
+        super(const SignUpFormDataInitial()) {
+    on<SignUpFormDataStarted>((event, emit) {
       print('SignUpDataPreservationStarted');
     });
 
-    on<SignUpDataPreservationFormSaved>((event, emit) async {
+    on<SignUpFormDataInputSaved>((event, emit) async {
       print('SignUpDataPreservationFormSaved');
 
       late final SaveDataUseCase saveDataUseCase;
@@ -31,7 +31,7 @@ class SignUpDataPreservationBloc
 
       saveDataUseCase = sl<SaveDataUseCase>();
 
-      emit(const SignUpDataPreservationInProgress());
+      emit(const SignUpFormDataSavingInProgress());
 
       eitherSaveData = await saveDataUseCase(
         Params(key: event.key, value: event.value),
@@ -40,13 +40,13 @@ class SignUpDataPreservationBloc
       eitherSaveData.fold((LocalStorageFailure left) {
         print('Failure');
 
-        emit(SignUpDataPreservationFailure(
+        emit(SignUpFormDataSavingFailure(
           errorTitle: left.title,
           errorMessage: left.message,
         ));
       }, (void right) {
         print('Success');
-        emit(const SignUpDataPreservationSuccess());
+        emit(const SignUpFormDataSavingSuccess());
       });
     });
   }
