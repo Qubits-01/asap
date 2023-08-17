@@ -6,7 +6,7 @@ import '../../../../../../utils/local_storage/domain/repository_interfaces/local
 import '../../../domain/entities/sign_up_stepper_entity.dart';
 import '../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
 import '../blocs/sign_up_stepper_bloc/sign_up_stepper_bloc.dart';
-import 'forms/address_information.dart';
+import 'forms/address_information_form.dart';
 import 'forms/security_information_form.dart';
 import 'forms/user_information_form.dart';
 
@@ -106,7 +106,7 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                 content: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: AddressInformation(
+                    child: AddressInformationForm(
                       addressInformationFormKey: _addressInformationFormKey,
                       stepperIndex: _stepperIndex,
                     ),

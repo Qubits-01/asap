@@ -19,13 +19,9 @@ class SignUpFormDataBloc
     required localStorageRepo,
   })  : _localStorageRepo = localStorageRepo,
         super(const SignUpFormDataInitial()) {
-    on<SignUpFormDataStarted>((event, emit) {
-      print('SignUpDataPreservationStarted');
-    });
+    on<SignUpFormDataStarted>((event, emit) {});
 
     on<SignUpFormDataInputSaved>((event, emit) async {
-      print('SignUpDataPreservationFormSaved');
-
       late final SaveDataUseCase saveDataUseCase;
       late final Either<LocalStorageFailure, void> eitherSaveData;
 

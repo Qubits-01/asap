@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/entities/up_residence_hall_entity.dart';
+import '../../../../domain/entities/sign_up_form_entity/address_information_entity.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 
 class DropdownButtonOnChanged {
@@ -15,7 +15,7 @@ class DropdownButtonOnChanged {
     required TextEditingController cityOrMunicipalityTextController,
     required TextEditingController barangayTextController,
     required TextEditingController streetAndBuildingNameTextController,
-    required UpResidenceHallEntity? upResidenceHallEntity,
+    required AddressInformationEntity? upResidenceHallEntity,
     required void Function() setState,
   }) {
     late bool? isFormValid;
@@ -31,7 +31,7 @@ class DropdownButtonOnChanged {
     // Typecast the [upResidenceHallEntity] variable to a non-nullable type since
     // it will never be null due to the implementation of the [DropdownMenuItem]
     // value properties (i.e., they are non-nullable by design).
-    upResidenceHallEntity as UpResidenceHallEntity;
+    upResidenceHallEntity as AddressInformationEntity;
 
     // [ Step 1.2. ]
     // At the first instance that the user selected a [DropdownMenuItem],

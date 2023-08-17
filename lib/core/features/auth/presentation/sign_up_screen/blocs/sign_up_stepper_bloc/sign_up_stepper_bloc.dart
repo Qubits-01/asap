@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../exception_handling/failures/entities/failure_entity.dart';
+import '../../../../../../entities/failure_entity.dart';
 import '../../../../domain/entities/sign_up_stepper_entity.dart';
 
 part 'event_handlers/on_sign_up_stepper_step_canceled_event_handler.dart';

@@ -45,10 +45,10 @@ void onSignUpStepperStepCanceledEventHandler({
       // [ Step 3.1. ]
       /// Update the current step's step state and its isActive status.
       signUpStepperEntity = signUpStepperEntity.copyWith(
-        addressInformationStepState:
+        userInformationStepState:
             isCurrentFormValid ? StepState.complete : StepState.error,
         // Special case (the user is in the first corresponding logical step).
-        isAddressInformationStepActive: true,
+        isUserInformationStepActive: true,
       );
 
       break;

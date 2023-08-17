@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../../constants/entities/up_residence_hall_entities.dart';
+import '../../../../../../../constants/entity_values/preset_addresses.dart';
 import '../../../../../../../constants/local_storage_cache_keys.dart';
-import '../../../../domain/entities/up_residence_hall_entity.dart';
+import '../../../../domain/entities/sign_up_form_entity/address_information_entity.dart';
 import '../../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
 import '../../helpers/delivery_address_text_field_state.dart';
 import '../../helpers/form_validators/preset_address_validator.dart';
-
 import '../dropdown_button_callbacks/dropdown_button_on_changed.dart';
 
-class AddressInformation extends StatefulWidget {
-  const AddressInformation({
+class AddressInformationForm extends StatefulWidget {
+  const AddressInformationForm({
     super.key,
     required GlobalKey<FormState> addressInformationFormKey,
     required List<int> stepperIndex,
@@ -22,10 +21,10 @@ class AddressInformation extends StatefulWidget {
   final List<int> _stepperIndex;
 
   @override
-  State<AddressInformation> createState() => _AddressInformationState();
+  State<AddressInformationForm> createState() => _AddressInformationState();
 }
 
-class _AddressInformationState extends State<AddressInformation> {
+class _AddressInformationState extends State<AddressInformationForm> {
   // Step 2: Address Information.
   // Address Information controllers.
   late final TextEditingController _provinceTextController;
@@ -74,7 +73,7 @@ class _AddressInformationState extends State<AddressInformation> {
       key: widget._addressInformationFormKey,
       child: Column(
         children: <Widget>[
-          DropdownButtonFormField<UpResidenceHallEntity>(
+          DropdownButtonFormField<AddressInformationEntity>(
             // hint: Text('Select a preset address'),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -82,7 +81,7 @@ class _AddressInformationState extends State<AddressInformation> {
               labelText: 'Preset Address',
             ),
             onChanged: (
-              UpResidenceHallEntity? upResidenceHallEntity,
+              AddressInformationEntity? addressInformationEntity,
             ) {
               _dropdownButtonOnChanged(
                 stepperIndex: widget._stepperIndex,
@@ -94,16 +93,16 @@ class _AddressInformationState extends State<AddressInformation> {
                 barangayTextController: _barangayTextController,
                 streetAndBuildingNameTextController:
                     _streetAndBuildingNameTextController,
-                upResidenceHallEntity: upResidenceHallEntity,
+                upResidenceHallEntity: addressInformationEntity,
                 setState: () => setState(() {}),
               );
             },
-            validator: (UpResidenceHallEntity? value) {
+            validator: (AddressInformationEntity? value) {
               return const PresetAddressValidator()(
-                upResidenceHallEntity: value,
+                addressInformationEntity: value,
               );
             },
-            onSaved: (UpResidenceHallEntity? newValue) {
+            onSaved: (AddressInformationEntity? newValue) {
               context.read<SignUpFormDataBloc>().add(
                     SignUpFormDataInputSaved(
                       key: LocalStorageCacheKeys.presetAddressTag,
@@ -111,25 +110,25 @@ class _AddressInformationState extends State<AddressInformation> {
                     ),
                   );
             },
-            items: const <DropdownMenuItem<UpResidenceHallEntity>>[
+            items: const <DropdownMenuItem<AddressInformationEntity>>[
               DropdownMenuItem(
-                value: UpResidenceHallEntities.ipilRH,
+                value: PresetAddresses.ipilRH,
                 child: Text('Ipil RH'),
               ),
               DropdownMenuItem(
-                value: UpResidenceHallEntities.yakalRH,
+                value: PresetAddresses.yakalRH,
                 child: Text('Yakal RH'),
               ),
               DropdownMenuItem(
-                value: UpResidenceHallEntities.kalayaanRH,
+                value: PresetAddresses.kalayaanRH,
                 child: Text('Kalayaan RH'),
               ),
               DropdownMenuItem(
-                value: UpResidenceHallEntities.acaciaRH,
+                value: PresetAddresses.acaciaRH,
                 child: Text('Acacia RH'),
               ),
               DropdownMenuItem(
-                value: UpResidenceHallEntities.otherUpRH,
+                value: PresetAddresses.otherUpRH,
                 child: Text('Other Address'),
               ),
             ],
