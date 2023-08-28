@@ -5,6 +5,7 @@ import '../../../../../../service_locator/service_locator.dart';
 import '../../../../../../utils/local_storage/domain/repository_interfaces/local_storage_repo_intf.dart';
 import '../../../domain/entities/sign_up_stepper_entity.dart';
 import '../blocs/sign_up_form_data_bloc/sign_up_form_data_bloc.dart';
+import '../blocs/sign_up_form_dropdown_bloc/sign_up_form_dropdown_bloc.dart';
 import '../blocs/sign_up_stepper_bloc/sign_up_stepper_bloc.dart';
 import 'forms/address_information_form.dart';
 import 'forms/security_information_form.dart';
@@ -28,6 +29,13 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
   late final GlobalKey<FormState> _addressInformationFormKey;
   late final GlobalKey<FormState> _securityInformationFormKey;
 
+  // Step 2: Address Information.
+  // Address Information controllers.
+  late final TextEditingController _provinceTextController;
+  late final TextEditingController _cityOrMunicipalityTextController;
+  late final TextEditingController _barangayTextController;
+  late final TextEditingController _streetAndBuildingNameTextController;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +46,25 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
     _userInformationFormKey = GlobalKey<FormState>();
     _addressInformationFormKey = GlobalKey<FormState>();
     _securityInformationFormKey = GlobalKey<FormState>();
+
+    // Step 2: Address Information.
+    // Address Information controllers.
+    _provinceTextController = TextEditingController();
+    _cityOrMunicipalityTextController = TextEditingController();
+    _barangayTextController = TextEditingController();
+    _streetAndBuildingNameTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // Step 2: Address Information.
+    // Address Information controllers.
+    _provinceTextController.dispose();
+    _cityOrMunicipalityTextController.dispose();
+    _barangayTextController.dispose();
+    _streetAndBuildingNameTextController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -55,6 +82,16 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
             );
           },
         ),
+        BlocProvider<SignUpFormDropdownBloc>(create: (_) {
+          return SignUpFormDropdownBloc(
+            addressInformationFormKey: _addressInformationFormKey,
+            provinceTextController: _provinceTextController,
+            cityOrMunicipalityTextController: _cityOrMunicipalityTextController,
+            barangayTextController: _barangayTextController,
+            streetAndBuildingNameTextController:
+                _streetAndBuildingNameTextController,
+          );
+        }),
         BlocProvider<SignUpFormDataBloc>(create: (_) {
           return SignUpFormDataBloc(
             localStorageRepo: sl<LocalStorageRepoIntf>(),
@@ -103,13 +140,10 @@ class _SignUpFormStepperState extends State<SignUpFormStepper> {
                 subtitle: const Text('Default address. Can be modified later.'),
                 state: signUpStepperEntity.addressInformationStepState,
                 isActive: signUpStepperEntity.isAddressInformationStepActive,
-                content: Card(
+                content: const Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: AddressInformationForm(
-                      addressInformationFormKey: _addressInformationFormKey,
-                      stepperIndex: _stepperIndex,
-                    ),
+                    padding: EdgeInsets.all(12.0),
+                    child: AddressInformationForm(),
                   ),
                 ),
               ),

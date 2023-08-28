@@ -43,6 +43,30 @@ class AddressInformationEntity implements EntityIntf {
   bool? get isUPDormitory => _isUPDormitory;
   bool? get canDeliverToThisAddress => _canDeliverToThisAddress;
 
+  /// Copy with.
+  AddressInformationEntity copyWith({
+    final String? tagName,
+    final String? province,
+    final String? cityOrMunicipality,
+    final String? barangay,
+    final String? streetAndBuildingName,
+    final String? completeBuildingName,
+    final bool? isUPDormitory,
+    final bool? canDeliverToThisAddress,
+  }) =>
+      AddressInformationEntity(
+        tagName: tagName ?? this.tagName,
+        province: province ?? this.province,
+        cityOrMunicipality: cityOrMunicipality ?? this.cityOrMunicipality,
+        barangay: barangay ?? this.barangay,
+        streetAndBuildingName:
+            streetAndBuildingName ?? this.streetAndBuildingName,
+        completeBuildingName: completeBuildingName ?? this.completeBuildingName,
+        isUPDormitory: isUPDormitory ?? this.isUPDormitory,
+        canDeliverToThisAddress:
+            canDeliverToThisAddress ?? this.canDeliverToThisAddress,
+      );
+
   /// Prerequisite setup for the [Equatable] package.
   @override
   List<Object?> get props => [

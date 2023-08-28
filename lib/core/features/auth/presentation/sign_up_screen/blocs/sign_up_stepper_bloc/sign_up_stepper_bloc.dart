@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../entities/failure_entity.dart';
 import '../../../../domain/entities/sign_up_stepper_entity.dart';
 
+part 'event_handlers/on_sign_up_stepper_dropdown_on_changed_event_handler.dart';
 part 'event_handlers/on_sign_up_stepper_step_canceled_event_handler.dart';
 part 'event_handlers/on_sign_up_stepper_step_continued_event_handler.dart';
 part 'event_handlers/on_sign_up_stepper_step_tapped_event_handler.dart';
@@ -51,6 +52,15 @@ class SignUpStepperBloc extends Bloc<SignUpStepperEvent, SignUpStepperState> {
         emit: emit,
         state: state,
         formKeys: _formKeys,
+      );
+    });
+
+    on<SignUpStepperDropdownOnChanged>((event, emit) {
+      onSignUpStepperDropdownOnChangedEventHandler(
+        event: event,
+        emit: emit,
+        state: state,
+        formKey: _formKeys[1], // addressInformationFormKey
       );
     });
   }

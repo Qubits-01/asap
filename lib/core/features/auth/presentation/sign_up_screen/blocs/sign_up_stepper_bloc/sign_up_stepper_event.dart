@@ -31,3 +31,17 @@ final class SignUpStepperStepTapped extends SignUpStepperEvent {
   @override
   List<Object> get props => [newIndex];
 }
+
+final class SignUpStepperDropdownOnChanged extends SignUpStepperEvent {
+  const SignUpStepperDropdownOnChanged({required final bool isFormValid})
+      : _isFormValid = isFormValid;
+
+  final bool _isFormValid;
+
+  /// Getters.
+  bool get isFormValid => _isFormValid;
+
+  /// Prerequisite setup for the [Equatable] package.
+  @override
+  List<Object> get props => [isFormValid];
+}

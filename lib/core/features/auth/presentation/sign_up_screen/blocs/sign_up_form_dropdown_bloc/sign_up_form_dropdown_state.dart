@@ -5,30 +5,35 @@ sealed class SignUpFormDropdownState extends Equatable {
     required final AddressInformationEntity addressInformationEntity,
     required final AddressInformationTextFieldStatusEntity
         addressInformationTextFieldStatusEntity,
+    final bool? isFormValid,
     final FailureEntity? failureEntity,
   })  : _addressInformationEntity = addressInformationEntity,
         _addressInformationTextFieldStatusEntity =
             addressInformationTextFieldStatusEntity,
+        _isFormValid = isFormValid,
         _failureEntity = failureEntity;
 
   final AddressInformationEntity _addressInformationEntity;
   final AddressInformationTextFieldStatusEntity
       _addressInformationTextFieldStatusEntity;
   final FailureEntity? _failureEntity;
+  final bool? _isFormValid;
 
   /// Getters.
   AddressInformationEntity get addressInformationEntity =>
       _addressInformationEntity;
   AddressInformationTextFieldStatusEntity
-      get addressInformationTextFieldsEntity =>
+      get addressInformationTextFieldStatusEntity =>
           _addressInformationTextFieldStatusEntity;
+  bool? get isFormValid => _isFormValid;
   FailureEntity? get failureEntity => _failureEntity;
 
   @override
   List<Object?> get props => [
         addressInformationEntity,
-        addressInformationTextFieldsEntity,
+        addressInformationTextFieldStatusEntity,
         failureEntity,
+        isFormValid,
       ];
 }
 
@@ -55,43 +60,20 @@ final class SignUpFormDropdownInitial extends SignUpFormDropdownState {
   });
 }
 
-final class SignUpFormDropdownVisualUpdateInProgress
+final class SignUpFormDropdownVisualUpdateSuccess
     extends SignUpFormDropdownState {
-  const SignUpFormDropdownVisualUpdateInProgress({
-    required final AddressInformationEntity addressInformationEntity,
-    required final AddressInformationTextFieldStatusEntity
-        addressInformationTextFieldStatusEntity,
-  }) : super(
-          addressInformationEntity: addressInformationEntity,
-          addressInformationTextFieldStatusEntity:
-              addressInformationTextFieldStatusEntity,
-        );
-}
-
-final class SignUpFromDropdownVisualUpdateSuccess
-    extends SignUpFormDropdownState {
-  const SignUpFromDropdownVisualUpdateSuccess({
-    required final AddressInformationEntity addressInformationEntity,
-    required final AddressInformationTextFieldStatusEntity
-        addressInformationTextFieldStatusEntity,
-  }) : super(
-          addressInformationEntity: addressInformationEntity,
-          addressInformationTextFieldStatusEntity:
-              addressInformationTextFieldStatusEntity,
-        );
+  const SignUpFormDropdownVisualUpdateSuccess({
+    required super.addressInformationEntity,
+    required super.addressInformationTextFieldStatusEntity,
+    required bool super.isFormValid,
+  });
 }
 
 final class SignUpFormDropdownVisualUpdateFailure
     extends SignUpFormDropdownState {
   const SignUpFormDropdownVisualUpdateFailure({
-    required final AddressInformationEntity addressInformationEntity,
-    required final AddressInformationTextFieldStatusEntity
-        addressInformationTextFieldStatusEntity,
-    required final FailureEntity failureEntity,
-  }) : super(
-          addressInformationEntity: addressInformationEntity,
-          addressInformationTextFieldStatusEntity:
-              addressInformationTextFieldStatusEntity,
-          failureEntity: failureEntity,
-        );
+    required super.addressInformationEntity,
+    required super.addressInformationTextFieldStatusEntity,
+    required FailureEntity super.failureEntity,
+  });
 }
